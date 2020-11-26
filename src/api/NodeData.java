@@ -1,25 +1,75 @@
 package api;
 
-public class NodeData implements node_data {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import api.GeoLocation;
+public class NodeData extends HashMap<Integer, edge_data> implements node_data , Comparable<node_data> {
 
     private int _key;
-    private static int Countkey = 0;
-    private geo_location _location;
+    private GeoLocation _location;
     private double _weight;
     private String _info = "";
-    private int _tag;
+    private int _tag;// for algorithms
+    private NodeData father;// for shortest path algo
 
-    public NodeData(){
-        this._key = Countkey++;
-        this._location = null;
-        this._weight = 0;
-        this._info = "";
-        this._tag = 0;
+    /**
+     *
+     * @param key - the node number
+     * @param location - for GUI
+     * @param weight - for algorithms
+     * @param info - for algorithms
+     * @param tag - for algorithms
+     */
+    public NodeData(int key, GeoLocation location, double weight, String info, int tag){
+        this._key = key;
+        this._location = new GeoLocation(location);
+        this._weight = weight;
+        this._info = info;
+        this._tag = tag;
     }
 
 
+    /**
+     *
+     * @param key - the node number
+     * @param location - for GUI
+     * @param weight - for algorithms
+     */
+    public NodeData(int key, GeoLocation location, double weight){
+        this._key = key;
+        this._location = new GeoLocation(location);
+        this._weight = weight;
+    }
+
+    /**
+     *
+     * @param key - the node number
+     * @param location - for GUI
+     */
+
+    public NodeData(int key, GeoLocation location){
+        this._key = key;
+        this._location = new GeoLocation(location);
+    }
+
+    /**
+     * Deep copy constructor
+     * @param n - the orgNode to copy
+     */
+    public NodeData(node_data n){
+        this(n.getKey(), (GeoLocation) n.getLocation(), n.getWeight(), n.getInfo(), n.getTag());
+    }
 
 
+    public NodeData(JSONObject jsonObject) throws JSONException {
+        this._key = jsonObject.getInt("id");
+        String[] s = jsonObject.getString("pos").split(",");
+        Double x = Double.parseDouble(s[0]);
+        Double y = Double.parseDouble(s[1]);
+        this._location = new GeoLocation(x,y);
+    }
 
     @Override
     public int getKey() {
@@ -34,7 +84,7 @@ public class NodeData implements node_data {
     @Override
     public void setLocation(geo_location p) {
 
-        this._location = p;
+        this._location = (GeoLocation) p;
     }
 
     @Override
@@ -69,4 +119,48 @@ public class NodeData implements node_data {
 
         this._tag = t;
     }
+
+    @Override
+    public int compareTo( node_data o) {
+        Double comp = getWeight();
+        return comp.compareTo(o.getWeight());
+    }
+
+
+    @Override
+    public String toString(){
+        return ""+this.getKey();
+    }
+
+    /**
+     *
+     * for algorithms such as "shortest path", to trace back the path
+     */
+    public NodeData getFather(){
+        return this.father;
+    }
+
+    /**
+     *
+     * for algorithms such as "shortest path", to trace back the path
+     */
+
+    public void setFather(node_data f){
+        this.father = (NodeData) f;
+    }
+
+    @Override
+    public boolean equals(Object arg0){
+        if (arg0 == null || !(arg0 instanceof NodeData))
+            return false;
+        NodeData n = (NodeData) arg0;
+        return n.getKey() == this.getKey() && n.getLocation() == this.getLocation() && super.equals(arg0);
+    }
+
+
+
+
+
+
+
 }

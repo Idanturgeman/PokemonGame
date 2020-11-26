@@ -83,7 +83,16 @@ public class EdgeData implements edge_data {
         return "E("+_src+","+_dest+")";
     }
 
-    
+
+
+    public boolean equals(Object arg0){
+        if(arg0==null || !(arg0 instanceof EdgeData))
+            return false;
+        EdgeData e = (EdgeData) arg0;
+        return getSrc() == e.getSrc() && getDest() == e.getDest() && getWeight() == e.getWeight();
+    }
+
+    //////Getters and Setters///////
 
     @Override
     public int getSrc() {
