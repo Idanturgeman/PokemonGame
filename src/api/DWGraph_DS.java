@@ -219,4 +219,36 @@ public class DWGraph_DS implements directed_weighted_graph{
     }
 
 
+    /**
+     * Compare with another DWgraph by comparing the amount of edges and all the nodes.
+     */
+    @Override
+    public boolean equals(Object arg0){
+        if (arg0 == null || !(arg0 instanceof DWGraph_DS))
+            return false;
+        DWGraph_DS dwGraphDs = (DWGraph_DS) arg0;
+        return this.sizeOfEdges == dwGraphDs.sizeOfEdges && this.nodeMap.equals(dwGraphDs.nodeMap);
+    }
+
+    @Override
+    public String toString(){
+        StringBuffer sb = new StringBuffer();
+        sb.append(sizeOfEdges);
+        sb.append(":\n");
+        for (Iterator<node_data> it = nodeMap.values().iterator(); it.hasNext();){
+            sb.append(it.next() + "\n");
+        }
+        if (nodeMap.size() > 0){
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+
+
+
+
+
+
+
 }
