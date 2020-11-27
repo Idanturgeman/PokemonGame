@@ -1,4 +1,4 @@
-# PokemonGame
+# PackmanGame
 
 This code showing how we can use a directed and weighted graph for a nice of pokemon game.
 this project is continued to the shortestPathOnGraph project as i promised, 
