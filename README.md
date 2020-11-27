@@ -1,6 +1,6 @@
 # PackmanGame
 
-This code showing how we can use a directed and weighted graph for a nice of pokemon game.
+This code showing how we can use a directed and weighted graph for a nice of packman game.
 this project is continued to the shortestPathOnGraph project as i promised, 
 only this time the graph is directed and also we can see it visually.
 the graph is calculated to perform in the best way as possible and for doing that it is used a BFS Dijkstra's algorithm.
