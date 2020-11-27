@@ -1,8 +1,12 @@
 package api;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class DWGraph_Algo implements dw_graph_algorithms {
     private static final int NOT_VISITED = 0, VISITED = 1, FINISH = 2;
@@ -115,6 +119,11 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     }
 
 
+    /**
+     * Set tag to VISITED in every Node in g that has path from n to it
+     * @param g - the graph to performs DFS on
+     * @param n - the Node to start from
+     */
     private void DFS(DWGraph_DS g, NodeData n){
         n.setTag(VISITED);
         for (Iterator<Integer> it = n.keySet().iterator(); it.hasNext();){
@@ -126,20 +135,94 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     }
 
 
+
+    //Dijkstra's Shortest path
     @Override
     public double shortestPathDist(int src, int dest) {
-        return 0;
+        NodeData s = (NodeData) myGraph.getNode(src);
+        NodeData d = (NodeData) myGraph.getNode(dest);
+
+        if (s == null || d == null) {
+            int nullNode = s == null ? src : dest;
+            throw new RuntimeException("Node dosn't exist (" + nullNode + ")");
+        }
+        // Mark all nodes unvisited and set weight 0
+        for (Iterator<node_data> it = myGraph.getV().iterator(); it.hasNext();) {
+            node_data n = it.next();
+            n.setTag(NOT_VISITED);
+            n.setWeight(Double.MAX_VALUE);
+            ((NodeData) n).setFather(null);
+        }
+
+        s.setWeight(0);
+        PriorityBlockingQueue<node_data> notVisited = new PriorityBlockingQueue<node_data>(myGraph.getV());
+
+        while (!notVisited.isEmpty()) {
+            node_data current = notVisited.remove();
+            if (current.getWeight() == Double.MAX_VALUE || current.getKey() == dest)
+                return current.getWeight();
+
+            // change all current unvisited neighbors weight if found shorter path
+            for (edge_data e : ((NodeData) current).values()) {
+
+                node_data neighbour = myGraph.getNode(e.getDest());
+                double newWeight = current.getWeight() + e.getWeight();
+                if (neighbour.getTag() == NOT_VISITED && newWeight < neighbour.getWeight()) {
+                    neighbour.setWeight(newWeight);
+                    notVisited.remove(neighbour);
+                    notVisited.add(neighbour);
+                    ((NodeData) neighbour).setFather(current);
+                }
+
+            }
+
+            current.setTag(VISITED);
+
+        }
+
+        return Double.MAX_VALUE;
     }
+
+
+    /**
+     * @param src - start node
+     * @param dest - end (target) node
+     * @return list of data of all the node in the shortest path across Dijkstra's algorithm
+     */
 
     @Override
     public List<node_data> shortestPath(int src, int dest) {
+        if (shortestPathDist(src, dest) < Double.MAX_VALUE) {
+            ArrayList<node_data> ans = new ArrayList<node_data>();
+            NodeData current = (NodeData) myGraph.getNode(dest);
+            do {
+                ans.add(0, current);
+            } while ((current = current.getFather()) != null);
+            return ans;
+        }
         return null;
     }
 
+
+    /** save the init graph to a text file for later use.
+     * @param file - the file name (may include a relative path).
+     * @return if the function was successful in saving the file.
+     */
     @Override
     public boolean save(String file) {
-        return false;
+     /*   try {
+            PrintWriter out = new PrintWriter(file);
+            out.print(myGraph);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+       */ return true;
     }
+
+
+
 
     @Override
     public boolean load(String file) {
