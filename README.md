@@ -10,7 +10,7 @@ moreover the project have a test files for every class.
 
 ### for download the project to IDE
 ```sh
-$ git clone https://github.com/Idanturjeman/PokemonGame.git
+$ git clone https://github.com/Idanturjeman/PackmanGame.git
 
 ```
 
