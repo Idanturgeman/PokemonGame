@@ -1,16 +1,16 @@
 # PackmanGame
 
 This code showing how we can use a directed and weighted graph for a nice of packman game.
-this project is continued to the shortestPathOnGraph project as i promised, 
-only this time the graph is directed and also we can see it visually.
-the graph is calculated to perform in the best way as possible and for doing that it is used a BFS Dijkstra's algorithm.
-moreover the project have a test files for every class.
+This project is continued to the shortestPathOnGraph project as i promised, 
+Only this time the graph is directed and also we can see it visually.
+The graph is calculated to perform in the best way as possible and for doing that it is used a BFS Dijkstra's algorithm.
+Moreover the project have a test files for every class.
 
-## culculate the shortest path with Dijktra's algorithm
-### some visual example
+## Culculate the shortest path with Dijktra's algorithm
+### Some visual example
 ![alt text](https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/FIGS/Dijkstra/weight01.gif)
 
-### for download the project to IDE
+### For download the project to IDE
 ```sh
 $ git clone https://github.com/Idanturjeman/PackmanGame.git
 
