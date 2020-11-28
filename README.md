@@ -11,6 +11,7 @@ Moreover the project have a test files for every class.
 ![alt text](https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/FIGS/Dijkstra/weight01.gif)
 
 ### For installing the project to IDE
+Get this [Pokemon game project](https://github.com/Idanturjeman/PokemonGame) to your own computer with your workspace directory.
 ```sh
 $ git clone https://github.com/Idanturjeman/PackmanGame.git
 
@@ -19,3 +20,8 @@ $ git clone https://github.com/Idanturjeman/PackmanGame.git
 ### Nedded for installing
 * [JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
 * [intllij](https://www.jetbrains.com/idea/) or some other IDE
+
+
+### In addition
+
+Enter [Wiki](https://github.com/Idanturjeman/PokemonGame/wiki) for more information on this project.
