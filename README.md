@@ -1,4 +1,4 @@
-# PackmanGame
+# PokemonGame
 
 This code showing how we can use a directed and weighted graph for a nice of packman game.
 This project is continued to the shortestPathOnGraph project as i promised, 
@@ -10,10 +10,12 @@ Moreover the project have a test files for every class.
 ### Some visual example
 ![alt text](https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/FIGS/Dijkstra/weight01.gif)
 
-### For download the project to IDE
+### For installing the project to IDE
 ```sh
 $ git clone https://github.com/Idanturjeman/PackmanGame.git
 
 ```
-### The inspiration :
-![alt text](https://fiverr-res.cloudinary.com/images/t_main1,q_auto,f_auto,q_auto,f_auto/gigs/1689558/original/Imagem28/put-your-face-in-a-game-like-pacman.jpg)
+
+### Nedded for installing
+* [JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
+* [intllij](https://www.jetbrains.com/idea/) or some other IDE
