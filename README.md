@@ -12,7 +12,7 @@ Moreover the project have a test files for every class.
 ### Some [Directed Weighted Graph](https://github.com/Idanturjeman/PokemonGame/wiki/Directed-Weighted-Graph) visual example
 ![alt text](https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/FIGS/Dijkstra/weight01.gif)
 
-### For installing the project to IDE
+### For installing the project 
 Get this [Pokemon game project](https://github.com/Idanturjeman/PokemonGame) to your own computer with your workspace directory.
 ```sh
 $ git clone https://github.com/Idanturjeman/PackmanGame.git
