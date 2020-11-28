@@ -7,6 +7,8 @@ The graph is calculated to perform in the best way as possible and for doing tha
 Moreover the project have a test files for every class.
 
 ## Culculate the shortest path with Dijktra's algorithm
+**see [Dijkstra's algorithms](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) for more info.**
+
 ### Some visual example
 ![alt text](https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/FIGS/Dijkstra/weight01.gif)
 
