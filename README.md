@@ -17,8 +17,8 @@ $ git clone https://github.com/Idanturjeman/PackmanGame.git
 ```
 
 ### Nedded for installing
-* [JDK](https://www.oracle.com/java/technologies/javase-downloads.html)
-* [intllij](https://www.jetbrains.com/idea/) or some other IDE
+* **[JDK](https://www.oracle.com/java/technologies/javase-downloads.html)**
+* **[intllij](https://www.jetbrains.com/idea/) or some other IDE**
 
 ## Culculate the shortest path with Dijktra's algorithm
 **see [Dijkstra's algorithms](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) for more info.**
