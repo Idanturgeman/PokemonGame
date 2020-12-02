@@ -2,8 +2,8 @@
 
 <img src = "https://o.aolcdn.com/images/dims?quality=95&image_uri=https%3A%2F%2Fs.yimg.com%2Fuu%2Fapi%2Fres%2F1.2%2Ft_lP6tcQ0CJbJTeV8mrV2g--%7EB%2FaD00OTA7dz05ODA7YXBwaWQ9eXRhY2h5b24-%2Fhttps%3A%2F%2Fo.aolcdn.com%2Fhss%2Fstorage%2Fmidas%2F6623d5a6ae583f81ee3515b6b3615c7f%2F204855766%2Flandscape-1456483171-pokemon2.jpg&client=amp-blogside-v2&signature=174e15e69478ef59a7371b8f5adf5727a4c321e6" width="500" >
 
-This code showing how we can use a directed and weighted graph for a nice of packman game.
-This project is continued to the shortestPathOnGraph project as i promised, 
+This code showing how we can use a directed and weighted graph for a nice of pokemon game.
+This project is continued to the [shortestPathOnGraph](https://github.com/Idanturjeman/ShortedPathOnGraph) project as i promised, 
 Only this time the graph is directed and also we can see it visually.
 The graph is calculated to perform in the best way as possible and for doing that it is used a BFS Dijkstra's algorithm.
 Moreover the project have a test files for every class.
