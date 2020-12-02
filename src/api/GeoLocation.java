@@ -20,6 +20,19 @@ public class GeoLocation implements geo_location {
         this(x, y, 0);
     }
 
+    public GeoLocation(String s) {
+        try {
+            String[] a = s.split(",");
+            _x = Double.parseDouble(a[0]);
+            _y = Double.parseDouble(a[1]);
+            _z = Double.parseDouble(a[2]);
+        }
+        catch(IllegalArgumentException e) {
+            System.err.println("ERR: got wrong format string for GeoLocation init, got:"+s+"  should be of format: x,y,x");
+            throw(e);
+        }
+    }
+
     @Override
     public double x() {
         return this._x;

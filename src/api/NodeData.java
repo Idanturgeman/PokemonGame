@@ -62,6 +62,31 @@ public class NodeData extends HashMap<Integer, edge_data> implements node_data ,
         this(n.getKey(), (GeoLocation) n.getLocation(), n.getWeight(), n.getInfo(), n.getTag());
     }
 
+    /**
+     * Construct from a String. Using for load graph from a text file
+     * @param s - String in toString() format
+     */
+    public NodeData(String s) {
+        String[] parts = s.split(" @ ");
+        String[] params = parts[0].split(", ");
+        this._key = Integer.parseInt(params[0]);
+        this._location = new GeoLocation(params[1]);
+        this._weight = Double.parseDouble(params[2]);
+        this._info = params[3];
+        this._tag = Integer.parseInt(params[4]);
+
+        if (parts.length > 1) {
+            String[] edges = parts[1].split(" # ");
+            for (String string : edges) {
+                EdgeData e = new EdgeData(string);
+                if (e.getSrc() == getKey())
+                    put(e.getDest(), e);
+                else
+                    throw new RuntimeException("Edge src is " + e.getSrc() + " but source node key is " + getKey());
+            }
+        }
+    }
+
 
     public NodeData(JSONObject jsonObject) throws JSONException {
         this._key = jsonObject.getInt("id");

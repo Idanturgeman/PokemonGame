@@ -66,6 +66,19 @@ public class EdgeData implements edge_data {
     }
 
     /**
+     * Construct from a String. Using for load graph from a text file
+     * @param s - String in toString() format
+     */
+    public EdgeData(String s) {
+        String[] arr = s.split(", ");
+        this._src = Integer.parseInt(arr[0]);
+        this._dest = Integer.parseInt(arr[1]);
+        this._weight = Double.parseDouble(arr[2]);
+        this._info = arr[3];
+        this._tag = Integer.parseInt(arr[4]);
+    }
+
+    /**
      *
      * @return - copy of this edge in the opposite direction
      */

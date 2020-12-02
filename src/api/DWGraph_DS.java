@@ -16,6 +16,20 @@ public class DWGraph_DS implements directed_weighted_graph{
 
     public DWGraph_DS(){}
 
+    /**
+     * Construct from a String. Using for load graph from a text file
+     * @param s - String in toString() format
+     */
+    public DWGraph_DS(String s) {
+        String[] parts = s.split(":\n");
+        this.sizeOfEdges = Integer.parseInt(parts[0]);
+        String[] edges = parts[1].split("\n");
+        for (String string : edges) {
+            NodeData n = new NodeData(string);
+            nodeMap.put(n.getKey(), n);
+        }
+    }
+
 
 
     public DWGraph_DS(JSONObject graphJson) throws JSONException{
