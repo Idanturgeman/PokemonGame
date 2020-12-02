@@ -24,7 +24,8 @@ $ git clone https://github.com/Idanturjeman/PackmanGame.git
 **see [Dijkstra's algorithms](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) for more info.**
 
 ### Some [Directed Weighted Graph](https://github.com/Idanturjeman/PokemonGame/wiki/Directed-Weighted-Graph) visual example
-![alt text](https://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/11-Graph/FIGS/Dijkstra/weight01.gif)
+
+<img src = "https://ucarecdn.com/d624d487-da51-42ad-a520-cc3fb8f253bd/" width="500" >
 
 
 ### In addition
