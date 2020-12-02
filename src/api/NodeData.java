@@ -132,6 +132,18 @@ public class NodeData extends HashMap<Integer, edge_data> implements node_data ,
         return ""+this.getKey();
     }
 
+
+   /* *//** return a string that hold all the information of the node.*//*
+    public String toString() {
+        String data = "[" + _key + "]:";
+
+        for (edge_data ni : this.values())
+        {
+            data += " [" + ni.getDest() + "," + this.get(ni) + "]";
+        }
+        data += ". tag = " + _tag + ".";
+        return data;
+    }*/
     /**
      *
      * for algorithms such as "shortest path", to trace back the path

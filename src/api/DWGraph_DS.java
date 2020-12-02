@@ -246,7 +246,23 @@ public class DWGraph_DS implements directed_weighted_graph{
 
 
 
+   /* *//** a toString function for the graph.
+     * prints the number of nodes edges in the graph,
+     * along with a list of every node and his neighbors edges and tags.
+     * @return
+     *//*
+    public String toString(){
+        String sGraph = "nodes: "+nodeMap.size()+", edges: "+sizeOfEdges;
+        Collection<node_data> graphList = this.getV();
 
+        for(Iterator<node_data> node = graphList.iterator(); node.hasNext();)
+        {
+            NodeData nodeI = (NodeData) node.next();
+            sGraph += "\n" + nodeI.toString();
+        }
+        return sGraph;
+    }
+*/
 
 
 

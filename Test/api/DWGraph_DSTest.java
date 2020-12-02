@@ -163,6 +163,14 @@ class DWGraph_DSTest {
     }
 
 
+    @Test
+    void print(){
+         for(int i = 0; i < 4; i++)
+        {
+            randGraph.connect(i, i+1, 2*i +1);
+        }
+        System.out.println(randGraph);
+    }
 
     @Test
     void testEquals() {

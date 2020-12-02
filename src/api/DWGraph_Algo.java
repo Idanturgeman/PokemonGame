@@ -228,4 +228,11 @@ public class DWGraph_Algo implements dw_graph_algorithms {
     public boolean load(String file) {
         return false;
     }
+
+    /** returns the init graph info. */
+    public String toString(){
+
+        return myGraph.toString();
+
+    }
 }
