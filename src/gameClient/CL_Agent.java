@@ -1,11 +1,10 @@
 package gameClient;
 
-import api.directed_weighted_graph;
-import api.edge_data;
-import api.geo_location;
-import api.node_data;
+import api.*;
 import gameClient.util.Point3D;
 import org.json.JSONObject;
+
+import java.util.Date;
 
 public class CL_Agent {
 		public static final double EPS = 0.0001;
@@ -20,8 +19,10 @@ public class CL_Agent {
 		private directed_weighted_graph _gg;
 		private CL_Pokemon _curr_fruit;
 		private long _sg_dt;
-		
+		private long _start_move;
 		private double _value;
+	    private double _DoubleSpeedW;
+	    private double _TurboleSpeedW;
 		
 		
 		public CL_Agent(directed_weighted_graph g, int start_node) {
@@ -166,4 +167,67 @@ public class CL_Agent {
 		public void set_sg_dt(long _sg_dt) {
 			this._sg_dt = _sg_dt;
 		}
+
+	public void addMoney(double d) {
+		this._value += d;
+	}
+
+
+	public boolean move() {
+		boolean ans = false;
+		if (this._curr_edge != null) {
+			this.updateSpeed();
+			long now = (new Date()).getTime();
+			double dt = (double)(now - this._start_move) / 1000.0D;
+			double v = this.getSpeed();
+			double pr = v * dt / this._curr_edge.getWeight();
+			int dest = this._curr_edge.getDest();
+			node_data dd = this._gg.getNode(dest);
+			geo_location ddd = dd.getLocation();
+			if (pr >= 1.0D) {
+				this._pos = ddd;
+				this._curr_node = dd;
+				this._curr_edge = null;
+				ans = true;
+			} else {
+				geo_location src = this._curr_node.getLocation();
+				double dx = ddd.x() - src.x();
+				double dy = ddd.y() - src.y();
+				double dz = ddd.z() - src.z();
+				double x = src.x() + dx * pr;
+				double y = src.y() + dy * pr;
+				double z = src.z() + dz * pr;
+				geo_location cr = new GeoLocation(x, y, z);
+				if (ddd.distance2D(cr) < ddd.distance2D(this._pos)) {
+					this._pos = cr;
+					ans = true;
+				}
+			}
+		}
+
+		return ans;
+	}
+
+	private void updateSpeed() {
+		double cs = this.getSpeed();
+		double w = this.getMoney();
+		if (cs == 1.0D && w >= this.doubleSpeedWeight()) {
+			this.setSpeed(2.0D);
+		}
+
+		if (cs == 2.0D && w >= this.turboSpeedWeight()) {
+			this.setSpeed(5.0D);
+		}
+
+	}
+	public double getMoney() {
+		return this._value;
+	}
+	public double doubleSpeedWeight() {
+		return this._DoubleSpeedW;
+	}
+
+	public double turboSpeedWeight() {
+		return this._TurboleSpeedW;
+	}
 	}

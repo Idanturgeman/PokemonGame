@@ -2,12 +2,14 @@ package api;
 
 import java.util.Date;
 
+import gameClient.CL_Agent;
 import Server.Game_Server;
 import Server.Stage;
 import api.directed_weighted_graph;
 import api.edge_data;
 import api.game_service;
 import api.geo_location;
+import gameClient.CL_Pokemon;
 import gameClient.util.Point3D;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,9 +34,9 @@ public class GameService implements game_service{
 
     public static final long SEED = 3331L;
     private Stages _stages = Stages.getStages_game_Ex4();
-    private oop_graph _graph;
-    private ArrayList<fruits> _fruits;
-    private ArrayList<robot> _robot;
+    private directed_weighted_graph _graph;
+    private ArrayList<CL_Pokemon> _pokemons;
+    private ArrayList<CL_Agent> _agents;
     private ArrayList<String> _log;
     private String _curr_log;
     private long _time_out;
@@ -42,16 +44,17 @@ public class GameService implements game_service{
     private String data;
     private static boolean _running = false;
     private static int _game_level;
-    private static int _id;
+    private static long _id;
     private static int _max_level = -1;
     private static boolean _is_logged_in = false;
     private static game_service _instance = null;
     private double _grade;
-    private int _robots_number;
+    private int _agents_number;
     private int _number_of_moves;
     private int _fruits_number;
     private long _seed = 3331L;
     private Random _rand;
+
 
     private GameService() {
     }
@@ -61,24 +64,47 @@ public class GameService implements game_service{
         this.data = file_graph;
         this._graph = new DWGraph_DS(file_graph);
         this._grade = 0.0D;
-        this._robots_number = robot_num;
+        this._agents_number = robot_num;
         this._fruits_number = fruit_num;
         this._seed = seed;
         this._rand = new Random(this._seed);
         this._time_out = time;
         this._start_time = -1L;
         this._curr_log = "" + g;
-        this._fruits = new ArrayList();
+        this._pokemons = new ArrayList();
 
         for(int i = 0; i < this._fruits_number; ++i) {
-            this._fruits.add(this.randomFruit());
+            this._pokemons.add(this.randomFruit());
         }
 
-        this._robot = new ArrayList();
+        this._agents = new ArrayList();
+    }
+
+    private CL_Pokemon randomFruit() {
+        int ind = -1;
+
+        for(int vs = this._graph.nodeSize(); this._graph.getNode(ind) == null; ind = (int)(this.random() * (double)vs)) {
+        }
+
+        Iterator<edge_data> itr = this._graph.getE(ind).iterator();
+        edge_data e = (edge_data)itr.next();
+        double r = this.random() * 0.6D;
+        r += 0.2D;
+        geo_location p = this._graph.getNode(e.getSrc()).getLocation();
+        geo_location d = this._graph.getNode(e.getDest()).getLocation();
+        double dx = r * (d.x() - p.x());
+        double dy = r * (d.y() - p.y());
+        geo_location pos = new GeoLocation(p.x() + dx, p.y() + dy, p.z());
+        int v = (int)(5.0D + this.random() * 11.0D);
+        return new CL_Pokemon((double)v, pos, e);
+    }
+
+    double random() {
+        return this._rand.nextDouble();
     }
 
 
-    public static game_service getServer(int g) {
+    public static game_service getServer(int g) throws JSONException {
         if (_instance != null && _instance.isRunning()) {
             System.err.println("The Server is still running!!");
             return null;
@@ -151,7 +177,7 @@ public class GameService implements game_service{
             data.put("fruits", this._fruits_number);
             data.put("grade", this._grade);
             data.put("moves", this._number_of_moves);
-            data.put("robots", this._robots_number);
+            data.put("robots", this._agents_number);
             data.put("game_level", _game_level);
             data.put("is_logged_in", _is_logged_in);
             data.put("max_user_level", _max_level);
@@ -164,14 +190,14 @@ public class GameService implements game_service{
         return ans;
     }
 
-    private void play(agent r) {
+    private void play(CL_Agent r) {
         double dx = 0.1D;
         dx /= 100.0D;
         int i = 0;
         int rf = 0;
 
-        while(i < this._Pokemons.size()) {
-            fruits f = (pokemon_price)this._pokemons.get(i);
+        while(i < this._pokemons.size()) {
+            CL_Pokemon f = (CL_Pokemon) this._pokemons.get(i);
             double v = f.grap(r, dx);
             if (v > 0.0D) {
                 r.addMoney(v);
@@ -189,6 +215,14 @@ public class GameService implements game_service{
 
     }
 
+    public void resetSeed() {
+        this.resetSeed(this._seed);
+    }
+
+    public void resetSeed(long seed) {
+        this._seed = seed;
+        this._rand = new Random(this._seed);
+    }
 
     @Override
     public String getGraph() {
@@ -197,12 +231,16 @@ public class GameService implements game_service{
 
     @Override
     public String getPokemons() {
-        ArrayList<String> ans = new ArrayList();
+        String ans = "";
+        for(CL_Pokemon pokemon : _pokemons){
+            ans = "" + pokemon;
+        }
+       /* ArrayList<String> ans = new ArrayList();
 
         for(int i = 0; i < this._pokemons.size(); ++i) {
-            ans.add(((pokemon)this._pokemons.get(i)).toString());
+            ans.add(((CL_Pokemon)this._pokemons.get(i)).toString());
         }
-
+*/
         return ans;
     }
 
@@ -211,7 +249,7 @@ public class GameService implements game_service{
         String ans = "";
 
         for(int i = 0; i < this._agents.size(); ++i) {
-            ans += ""+((agent)this._agents.get(i)).toString();
+            ans += ""+((CL_Agent)this._agents.get(i)).toString();
         }
 
         return ans;
@@ -221,7 +259,7 @@ public class GameService implements game_service{
     public boolean addAgent(int start_node) {
         boolean ans = false;
         if (this._agents.size() < this._agents_number && this._graph.getNode(start_node) != null) {
-            AgentG r = new AgentG(this._graph, start_node);
+            CL_Agent r = new CL_Agent(this._graph, start_node);
             this._agents.add(r);
             ans = true;
         }
@@ -282,9 +320,9 @@ public class GameService implements game_service{
             return ans;
         } else {
             for(int i = 0; i < this._agents.size(); ++i) {
-                String c = (agent)this._agents.get(i);
+                CL_Agent c = (CL_Agent)this._agents.get(i);
                 if (c.getID() == id && !c.isMoving()) {
-                    oop_edge_data e = this._graph.getEdge(c.getSrcNode(), next_node);
+                    edge_data e = this._graph.getEdge(c.getSrcNode(), next_node);
                     if (e != null) {
                         c.setNextNode(next_node);
                         ans = (new Date()).getTime();
@@ -322,7 +360,7 @@ public class GameService implements game_service{
             double g = 0.0D;
 
             for(int i = 0; i < this._agents.size(); ++i) {
-                agent c = (robot)this._agents.get(i);
+                CL_Agent c = (CL_Agent) this._agents.get(i);
                 c.move();
                 this.play(c);
                 g += c.getMoney();
@@ -352,4 +390,43 @@ public class GameService implements game_service{
 
         return _is_logged_in;
     }
+
+    private int checkNextLevel(int _max_level, int _game_level, int _number_of_moves, int grade) {
+        return _max_level;
+    }
+
+    public boolean save(String file_name) {
+        boolean ans = false;
+
+        try {
+            FileOutputStream fout = new FileOutputStream(file_name);
+            ObjectOutputStream oos = new ObjectOutputStream(fout);
+            oos.writeObject(this._log);
+            ans = true;
+            oos.close();
+            fout.close();
+        } catch (FileNotFoundException var5) {
+            var5.printStackTrace();
+        } catch (IOException var6) {
+            var6.printStackTrace();
+        }
+
+        return ans;
+    }
+
+    public boolean load(String file_name) {
+        boolean ans = false;
+
+        try {
+            FileInputStream streamIn = new FileInputStream(file_name);
+            ObjectInputStream objectinputstream = new ObjectInputStream(streamIn);
+            this._log = (ArrayList)objectinputstream.readObject();
+            ans = true;
+        } catch (Exception var5) {
+            var5.printStackTrace();
+        }
+
+        return ans;
+    }
+
 }

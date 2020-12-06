@@ -1,17 +1,18 @@
 package gameClient;
 import api.edge_data;
-import gameClient.util.Point3D;
+import api.GeoLocation;
+import api.geo_location;
 import org.json.JSONObject;
 
 public class CL_Pokemon {
 	private edge_data _edge;
 	private double _value;
 	private int _type;
-	private Point3D _pos;
+	private geo_location _pos;
 	private double min_dist;
 	private int min_ro;
 	
-	public CL_Pokemon(Point3D p, int t, double v, double s, edge_data e) {
+	public CL_Pokemon(geo_location p, int t, double v, double s, edge_data e) {
 		_type = t;
 	//	_speed = s;
 		_value = v;
@@ -20,6 +21,13 @@ public class CL_Pokemon {
 		min_dist = -1;
 		min_ro = -1;
 	}
+
+	public CL_Pokemon(double v, geo_location p, edge_data e) {
+		this._value = v;
+		this._pos = new GeoLocation(p);
+		this._edge = e;
+	}
+
 	public static CL_Pokemon init_from_json(String json) {
 		CL_Pokemon ans = null;
 		try {
@@ -41,7 +49,7 @@ public class CL_Pokemon {
 		this._edge = _edge;
 	}
 
-	public Point3D getLocation() {
+	public geo_location getLocation() {
 		return _pos;
 	}
 	public int getType() {return _type;}
@@ -63,4 +71,23 @@ public class CL_Pokemon {
 	public void setMin_ro(int min_ro) {
 		this.min_ro = min_ro;
 	}
+
+
+
+	public double grap(CL_Agent r, double dist) {
+		double ans = 0.0D;
+		if (this._edge != null && r != null) {
+			int d = r.getNextNode();
+			if (this._edge.getDest() == d) {
+				geo_location rp = r.getLocation();
+				if (dist > rp.distance2D(this._pos)) {
+					ans = this._value;
+				}
+			}
+		}
+
+		return ans;
+	}
+
+
 }

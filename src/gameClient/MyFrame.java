@@ -82,7 +82,7 @@ public class MyFrame extends JFrame{
 		while(itr.hasNext()) {
 			
 			CL_Pokemon f = itr.next();
-			Point3D c = f.getLocation();
+			geo_location c = f.getLocation();
 			int r=10;
 			g.setColor(Color.green);
 			if(f.getType()<0) {g.setColor(Color.orange);}

@@ -58,6 +58,14 @@ public class GeoLocation implements geo_location {
     }
 
 
+    public double distance2D(geo_location g2)
+    {
+        double dx = this.x() - g2.x();
+        double dy = this.y() - g2.y();
+        double t = (dx*dx+dy*dy);
+        return Math.sqrt(t);
+    }
+
 
 
 
