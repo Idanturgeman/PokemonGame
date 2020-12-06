@@ -3,8 +3,6 @@ package api;
 import java.util.Date;
 
 import gameClient.CL_Agent;
-import Server.Game_Server;
-import Server.Stage;
 import api.directed_weighted_graph;
 import api.edge_data;
 import api.game_service;
@@ -33,7 +31,7 @@ import org.json.JSONObject;
 public class GameService implements game_service{
 
     public static final long SEED = 3331L;
-    private Stages _stages = Stages.getStages_game_Ex4();
+    private LevelS_Data _stages = LevelS_Data.getStages_game_Ex4();
     private directed_weighted_graph _graph;
     private ArrayList<CL_Pokemon> _pokemons;
     private ArrayList<CL_Agent> _agents;
@@ -297,14 +295,14 @@ public class GameService implements game_service{
         int grade = (int)this._grade;
         _running = false;
         if (_is_logged_in) {
-            DB_Write.writeRes(_id, _game_level, this._number_of_moves, grade);
+            JSonData.writeRes(_id, _game_level, this._number_of_moves, grade);
             if (_game_level == _max_level) {
-                Stage st = new Stage(_game_level, this._number_of_moves, grade);
+                LevelData st = new LevelData(_game_level, this._number_of_moves, grade);
                 this._stages.setCurr(_max_level);
                 int ml = this._stages.testNext(st);
                 if (ml > _max_level) {
                     _max_level = ml;
-                    DB_Write.updateMaxLevel(_id, _max_level);
+                    JSonData.updateMaxLevel(_id, _max_level);
                 }
             }
         }

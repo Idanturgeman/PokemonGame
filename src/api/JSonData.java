@@ -36,7 +36,7 @@ public class JSonData {
         return ans;
     }
 
-    static boolean writeRes(int id, int level, int moves, int grade) {
+    static boolean writeRes(long id, int level, int moves, int grade) {
         boolean ans = false;
         long now = (new Date()).getTime();
         String query = " insert into Logs (UserID, LevelID, time, moves, score) values (" + id + ", " + level + ", CURRENT_TIMESTAMP," + moves + " , " + grade + ")";
@@ -56,7 +56,7 @@ public class JSonData {
         return ans;
     }
 
-    static boolean writeKML(int id, int level, String KML) {
+    static boolean writeKML(long id, int level, String KML) {
         boolean ans = false;
         String sql = "UPDATE Users SET kml_" + level + " = '" + KML + "' WHERE userID =" + id;
 
@@ -75,7 +75,7 @@ public class JSonData {
         return ans;
     }
 
-    static boolean updateMaxLevel(int id, int max_level) {
+    static boolean updateMaxLevel(long id, int max_level) {
         boolean ans = false;
         String sql = "UPDATE Users SET levelNum = " + max_level + " WHERE userID =" + id;
 
