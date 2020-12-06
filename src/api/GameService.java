@@ -375,7 +375,7 @@ public class GameService implements game_service{
     public boolean login(long id) {
         if (!_running) {
             try {
-                _max_level = DB_Write.login(id);
+                _max_level = JSonData.login(id);
                 if (_max_level >= 0) {
                     _is_logged_in = true;
                     _id = id;
