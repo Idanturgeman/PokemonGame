@@ -24,7 +24,7 @@ public class Ex2 implements Runnable{
     public static void main(String[] a) {
         Thread client = new Thread(new Ex2());
         if(a.length == 0){
-            ListenerData log = new ListenerData();
+            FrameData log = new FrameData();
             log.loginPanel();
             while(log.isOpen()){
                 try {

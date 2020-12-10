@@ -8,8 +8,9 @@ import gameClient.CL_Pokemon;
 import gameClient.util.Point3D;
 import gameClient.util.Range;
 import gameClient.util.Range2D;
-
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.*;
 import java.util.Iterator;
 import java.util.List;
@@ -21,16 +22,27 @@ import java.util.List;
  * code and not to take it "as is".
  *
  */
-public class FrameData extends JFrame{
+public class FrameData extends JFrame implements ActionListener{
     private Arena _ar;
     private gameClient.util.Range2Range _w2f;
     private game_service _game;
     private Image graphImg;
 
+    private static boolean _open = true;
+    private static int _scenario = 0;
+    private static int _id = -1;
+    private static JComboBox _sceneNum;
+    private static JButton _freePlay;
+    private static JButton _loginButton;
+    private static JTextField _userTxt;
+    private static JFrame login;
+
+
     FrameData(String a, game_service game) {
         super(a);
         _game = game;
     }
+
     public void update(Arena ar) {
         this._ar = ar;
         updateFrame();
@@ -54,6 +66,29 @@ public class FrameData extends JFrame{
         drawScore(g);
         updateFrame();
     }
+
+
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == _sceneNum){
+            int scenario = _sceneNum.getSelectedIndex();
+            _scenario = scenario;
+        }
+        if(e.getSource() == _freePlay){
+            _open = false;
+        }
+        if(e.getSource() == _loginButton){
+            try{
+                int id = Integer.parseInt(_userTxt.getText());
+                if(id > 0){
+                    _id = id;
+                    _open = false;
+                }
+            }
+            catch (Exception ex){
+            }
+        }
+    }
+
 
     @Override
     public void paintComponents(Graphics g){
@@ -152,5 +187,70 @@ public class FrameData extends JFrame{
         geo_location s0 = this._w2f.world2frame(s);
         geo_location d0 = this._w2f.world2frame(d);
         g.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
+    }
+
+    public static void main(String[] a){
+        //  loginPanel();
+    }
+
+    public static void loginPanel(){
+        JPanel panel = new JPanel();
+        login = new JFrame();
+        login.setSize(330,160);
+        panel.setLayout(null);
+        // login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        login.add(panel);
+        JLabel user = new JLabel("User:");
+        user.setBounds(10,20,80,25);
+
+        JLabel scene = new JLabel("Scenario:");
+        scene.setBounds(10,50,80,25);
+
+        _userTxt = new JTextField(20);
+        _userTxt.setBounds(100,20,165,25);
+
+        String scenes[] = new String[24];
+        for(int i = 0; i < 24; i++){
+            scenes[i] = String.valueOf(i);
+        }
+        _sceneNum = new JComboBox(scenes);
+        _sceneNum.addActionListener(new FrameData());
+        _sceneNum.setBounds(100,50,165,25);
+
+        _freePlay = new JButton("Free Play");
+        _freePlay.addActionListener(new FrameData());
+        _freePlay.setBounds(10,80,120,30);
+
+        _loginButton = new JButton("Login");
+        _loginButton.addActionListener(new FrameData());
+        _loginButton.setBounds(170,80,120,30);
+
+        panel.add(user);
+        panel.add(scene);
+        panel.add(_userTxt);
+        panel.add(_sceneNum);
+        panel.add(_freePlay);
+        panel.add(_loginButton);
+        login.setVisible(true);
+    }
+
+    FrameData(){}
+
+
+
+    public void dispose(){
+        login.dispose();
+    }
+
+    public boolean isOpen() {
+        return _open;
+    }
+
+    public int getID(){
+        return _id;
+    }
+
+    public int getScenario(){
+        return _scenario;
     }
 }
