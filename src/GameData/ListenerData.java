@@ -5,7 +5,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class listenerData implements ActionListener {
+public class ListenerData implements ActionListener {
 
     private static boolean _open = true;
     private static int _scenario = 0;
@@ -41,15 +41,15 @@ public class listenerData implements ActionListener {
             scenes[i] = String.valueOf(i);
         }
         _sceneNum = new JComboBox(scenes);
-        _sceneNum.addActionListener(new listenerData());
+        _sceneNum.addActionListener(new ListenerData());
         _sceneNum.setBounds(100,50,165,25);
 
         _freePlay = new JButton("Free Play");
-        _freePlay.addActionListener(new listenerData());
+        _freePlay.addActionListener(new ListenerData());
         _freePlay.setBounds(10,80,120,30);
 
         _loginButton = new JButton("Login");
-        _loginButton.addActionListener(new listenerData());
+        _loginButton.addActionListener(new ListenerData());
         _loginButton.setBounds(170,80,120,30);
 
         panel.add(user);

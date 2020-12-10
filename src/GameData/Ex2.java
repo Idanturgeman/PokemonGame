@@ -14,17 +14,17 @@ import java.util.List;
 
 public class Ex2 implements Runnable{
 
-    private static FrameData _win;
-    private static Arena _ar;
+    private static FrameData _frame;
+    private static Arena _arena;
     private static int _id = -1;
     private static int _scenario = 0;
-    private static ArrayList<Thread> _agents = new ArrayList<>();
-    private static directed_weighted_graph _graph;
+    private static ArrayList<Thread> _agentList = new ArrayList<>();
+    private static directed_weighted_graph _myGraph;
 
     public static void main(String[] a) {
         Thread client = new Thread(new Ex2());
         if(a.length == 0){
-            listenerData log = new listenerData();
+            ListenerData log = new ListenerData();
             log.loginPanel();
             while(log.isOpen()){
                 try {
@@ -54,16 +54,17 @@ public class Ex2 implements Runnable{
         init(game);
 
         game.startGame();
-        _win.setTitle("Ex2 - OOP: (NONE trivial Solution) "+game.toString());
+        _frame.setTitle("Ex2 - OOP: (NONE trivial Solution) "+game.toString());
         int ind=0;
         long dt=1000/60;  //60FPS
         moveAgents(game);
-        for(Thread thread : _agents){
+        for(Thread thread : _agentList){
             thread.start();
         }
         while(game.isRunning()) {
             try {
-                if(ind%1==0) {_win.repaint();}
+                if(ind%1==0) {
+                    _frame.repaint();}
                 Thread.sleep(dt);
                 ind++;
             }
@@ -78,17 +79,17 @@ public class Ex2 implements Runnable{
 
     private void moveAgents(game_service game) {
         String lg = game.move();
-        List<CL_Agent> log = Arena.getAgents(lg, _graph);
-        _ar.setAgents(log);
+        List<CL_Agent> log = Arena.getAgents(lg, _myGraph);
+        _arena.setAgents(log);
         String fs =  game.getPokemons();
         List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
-        _ar.setPokemons(ffs);
-        moveData mover = new moveData(_ar,_graph,game,log.size());
+        _arena.setPokemons(ffs);
+        MoveData mover = new MoveData(_arena, _myGraph,game,log.size());
         for(int i=0;i<log.size();i++) {
             CL_Agent ag = log.get(i);
             AgentData agent = new AgentData(ag,game,mover);
             Thread thread = new Thread(agent);
-            _agents.add(thread);
+            _agentList.add(thread);
         }
     }
 
@@ -96,16 +97,16 @@ public class Ex2 implements Runnable{
         String g = game.getGraph();
         String fs = game.getPokemons();
         DWGraphs_Algo ga = new DWGraphs_Algo();
-        _graph = ga.Json2Graph(g);
-        _ar = new Arena();
-        _ar.setGraph(_graph);
-        _ar.setPokemons(Arena.json2Pokemons(fs));
-        _win = new FrameData("Ex2", game);
-        _win.setSize(1000, 700);
-        _win.update(_ar);
+        _myGraph = ga.Json2Graph(g);
+        _arena = new Arena();
+        _arena.setGraph(_myGraph);
+        _arena.setPokemons(Arena.json2Pokemons(fs));
+        _frame = new FrameData("Ex2", game);
+        _frame.setSize(1000, 700);
+        _frame.update(_arena);
 
 
-        _win.show();
+        _frame.show();
         String info = game.toString();
         JSONObject line;
         try {
@@ -115,7 +116,7 @@ public class Ex2 implements Runnable{
             System.out.println(info);
             System.out.println(game.getPokemons());
             ArrayList<CL_Pokemon> cl_fs = Arena.json2Pokemons(game.getPokemons());
-            for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),_graph);}
+            for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a), _myGraph);}
             for(int a = 0;a<rs;a++) {
                 int ind = a%cl_fs.size();
                 CL_Pokemon c = cl_fs.get(ind);
