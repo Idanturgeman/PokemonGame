@@ -7,6 +7,4 @@ public interface geo_location {
     public double y();
     public double z();
     public double distance(geo_location g);
-
-    public double distance2D(geo_location cr);
 }

@@ -3,8 +3,6 @@
  */
 package gameClient.util;
 
-import api.geo_location;
-
 import java.io.Serializable;
 
 public class Point3D implements geo_location, Serializable{
@@ -54,6 +52,11 @@ public class Point3D implements geo_location, Serializable{
         double dz = this.z() - p2.z();
         double t = (dx*dx+dy*dy+dz*dz);
         return Math.sqrt(t);
+    }
+
+    @Override
+    public double distance2D(geo_location cr) {
+        return 0;
     }
 
     public boolean equals(Object p) {

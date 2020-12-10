@@ -1,203 +1,155 @@
 package api;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.util.Collection;
 import java.util.HashMap;
-import api.GeoLocation;
-public class NodeData extends HashMap<Integer, edge_data> implements node_data , Comparable<node_data> {
+import java.util.LinkedList;
+
+public class NodeData implements node_data{
 
     private int _key;
-    private GeoLocation _location;
-    private double _weight;
-    private String _info = "";
-    private int _tag;// for algorithms
-    private NodeData father;// for shortest path algo
+    private double _weight = 0;
+    private int _tag = 0;
+    private String _info;
+    private geo_location _geoLo = new GeoLocation(0,0,0);
+    private HashMap<Integer, edge_data> _srcE = new HashMap<>();
+    private HashMap<Integer, edge_data> _destE = new HashMap<>();
+    private LinkedList<edge_data> _edges = new LinkedList<>();
+    private LinkedList<edge_data> _edges2 = new LinkedList<>();
 
-    /**
-     *
-     * @param key - the node number
-     * @param location - for GUI
-     * @param weight - for algorithms
-     * @param info - for algorithms
-     * @param tag - for algorithms
-     */
-    public NodeData(int key, GeoLocation location, double weight, String info, int tag){
-        this._key = key;
-        this._location = new GeoLocation(location);
-        this._weight = weight;
-        this._info = info;
-        this._tag = tag;
+    public NodeData(int key){
+        setKey(key);
     }
 
 
-    /**
-     *
-     * @param key - the node number
-     * @param location - for GUI
-     * @param weight - for algorithms
-     */
-    public NodeData(int key, GeoLocation location, double weight){
-        this._key = key;
-        this._location = new GeoLocation(location);
-        this._weight = weight;
-    }
-
-    /**
-     *
-     * @param key - the node number
-     * @param location - for GUI
-     */
-
-    public NodeData(int key, GeoLocation location){
-        this._key = key;
-        this._location = new GeoLocation(location);
-    }
-
-    /**
-     * Deep copy constructor
-     * @param n - the orgNode to copy
-     */
-    public NodeData(node_data n){
-        this(n.getKey(), (GeoLocation) n.getLocation(), n.getWeight(), n.getInfo(), n.getTag());
-    }
-
-    /**
-     * Construct from a String. Using for load graph from a text file
-     * @param s - String in toString() format
-     */
-    public NodeData(String s) {
-        String[] parts = s.split(" @ ");
-        String[] params = parts[0].split(", ");
-        this._key = Integer.parseInt(params[0]);
-        this._location = new GeoLocation(params[1]);
-        this._weight = Double.parseDouble(params[2]);
-        this._info = params[3];
-        this._tag = Integer.parseInt(params[4]);
-
-        if (parts.length > 1) {
-            String[] edges = parts[1].split(" # ");
-            for (String string : edges) {
-                EdgeData e = new EdgeData(string);
-                if (e.getSrc() == getKey())
-                    put(e.getDest(), e);
-                else
-                    throw new RuntimeException("Edge src is " + e.getSrc() + " but source node key is " + getKey());
-            }
-        }
-    }
-
-
-    public NodeData(JSONObject jsonObject) throws JSONException {
-        this._key = jsonObject.getInt("id");
-        String[] s = jsonObject.getString("pos").split(",");
-        Double x = Double.parseDouble(s[0]);
-        Double y = Double.parseDouble(s[1]);
-        this._location = new GeoLocation(x,y);
-    }
-
-    @Override
-    public int getKey() {
-        return this._key;
-    }
 
     @Override
     public geo_location getLocation() {
-        return this._location;
+        return _geoLo;
     }
 
     @Override
     public void setLocation(geo_location p) {
+        _geoLo = p;
+    }
 
-        this._location = (GeoLocation) p;
+    public boolean hasEdge(int dest){
+
+        return _srcE.containsKey(dest);
+    }
+
+    public edge_data getEdge(int dest){
+        if(_srcE.containsKey(dest))
+        {
+            return _srcE.get(dest);
+        }
+        return null;
+    }
+
+
+    public void addEdge(edge_data e){
+        int dest = e.getDest();
+        if(!_srcE.containsKey(dest))
+        {
+            _srcE.put(dest, e);
+            _edges.add(e);
+        }
+    }
+
+
+    public edge_data removeEdge(int dest){
+        if(_srcE.containsKey(dest))
+        {
+            edge_data edge = _srcE.get(dest);
+            _srcE.remove(dest);
+            _edges.remove(edge);
+            return edge;
+        }
+        return null;
+    }
+
+
+    public void ReversEdge(edge_data e){
+        int src = e.getSrc();
+        if(!_destE.containsKey(src))
+        {
+            _destE.put(src,e);
+            _edges2.add(e);
+        }
+    }
+
+    public void removeReversEdge(int src){
+        if(_destE.containsKey(src))
+        {
+            edge_data edge = _destE.get(src);
+            _destE.remove(src);
+            _edges2.remove(edge);
+        }
+    }
+
+
+    public Collection<edge_data> getEdgeCol(){
+
+        return _edges;
+    }
+
+    public Collection<edge_data> getEdgeCol2(){
+
+        return _edges2;
+    }
+
+
+    public String toString(){
+        String info = "[" + _key + "]:";
+        for(edge_data e : _edges)
+        {
+            info += " ["+e.getDest()+","+e.getWeight()+"]";
+        }
+        info +=". tag = " + _tag + ", ";
+        info +="weight = " + _weight + ". ";
+        info += _geoLo;
+        return info;
+    }
+
+
+    /////////////////Getters and Setters/////////////////////////////////////////////////////////////////////////////
+    @Override
+    public int getKey() {
+        return _key;
+    }
+
+    public void setKey(int key){
+        _key = key;
     }
 
     @Override
     public double getWeight() {
-        return this._weight;
+        return _weight;
     }
 
     @Override
     public void setWeight(double w) {
-
-        this._weight = w;
+        _weight = w;
     }
 
     @Override
     public String getInfo() {
-        return this._info;
+        return _info;
     }
 
     @Override
     public void setInfo(String s) {
-
-        this._info = s;
+        _info = s;
     }
 
     @Override
     public int getTag() {
-        return this._tag;
+        return _tag;
     }
 
     @Override
     public void setTag(int t) {
-
-        this._tag = t;
+        _tag = t;
     }
-
-    @Override
-    public int compareTo( node_data o) {
-        Double comp = getWeight();
-        return comp.compareTo(o.getWeight());
-    }
-
-
-    @Override
-    public String toString(){
-        return ""+this.getKey();
-    }
-
-
-   /* *//** return a string that hold all the information of the node.*//*
-    public String toString() {
-        String data = "[" + _key + "]:";
-
-        for (edge_data ni : this.values())
-        {
-            data += " [" + ni.getDest() + "," + this.get(ni) + "]";
-        }
-        data += ". tag = " + _tag + ".";
-        return data;
-    }*/
-    /**
-     *
-     * for algorithms such as "shortest path", to trace back the path
-     */
-    public NodeData getFather(){
-        return this.father;
-    }
-
-    /**
-     *
-     * for algorithms such as "shortest path", to trace back the path
-     */
-
-    public void setFather(node_data f){
-        this.father = (NodeData) f;
-    }
-
-    @Override
-    public boolean equals(Object arg0){
-        if (arg0 == null || !(arg0 instanceof NodeData))
-            return false;
-        NodeData n = (NodeData) arg0;
-        return n.getKey() == this.getKey() && n.getLocation() == this.getLocation() && super.equals(arg0);
-    }
-
-
-
-
-
 
 
 }

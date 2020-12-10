@@ -1,284 +1,160 @@
 package api;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
 
-public class DWGraph_DS implements directed_weighted_graph{
-    private HashMap<Integer,node_data> nodeMap = new HashMap<Integer, node_data>();
-    private int sizeOfEdges = 0;
-    private int myMc = 0;
+public class DWGraph_DS implements directed_weighted_graph {
 
-
-    public DWGraph_DS(){}
-
-    /**
-     * Construct from a String. Using for load graph from a text file
-     * @param s - String in toString() format
-     */
-    public DWGraph_DS(String s) {
-        String[] parts = s.split(":\n");
-        this.sizeOfEdges = Integer.parseInt(parts[0]);
-        String[] edges = parts[1].split("\n");
-        for (String string : edges) {
-            NodeData n = new NodeData(string);
-            nodeMap.put(n.getKey(), n);
-        }
-    }
-
-
-
-    public DWGraph_DS(JSONObject graphJson) throws JSONException{
-        JSONArray nodesJson = graphJson.getJSONArray("Nodes");
-        for (int i = 0; i < nodesJson.length(); i++){
-            addNode(new NodeData(nodesJson.getJSONObject(i)));
-        }
-
-        JSONArray edgesJson = graphJson.getJSONArray("Edges");
-        for (int i = 0; i < edgesJson.length(); i++){
-            connect(new EdgeData(edgesJson.getJSONObject(i)));
-        }
-    }
-
-    /**
-     *
-     * @param key - the node_id
-     * @return the node data with this key
-     */
+    private HashMap<Integer, node_data> _nodesMap = new HashMap<>();
+    private LinkedList<node_data> _nodesList = new LinkedList<>();
+    private int _edgeSize = 0;
+    private int _MC = 0;
 
     @Override
     public node_data getNode(int key) {
-        return nodeMap.get(key);
+        if (_nodesMap.containsKey(key))
+        {
+            return _nodesMap.get(key);
+        }
+        return null;
     }
 
-
-    /**
-     *
-     * @param src - the source of the edge
-     * @param dest - the destination of the edge
-     * @return the edge data with this src and dest
-     */
     @Override
     public edge_data getEdge(int src, int dest) {
-        NodeData n = (NodeData) nodeMap.get(src);
-        return n != null ? n.get(dest) : null;
+        if (_nodesMap.containsKey(src) && _nodesMap.containsKey(dest) && src != dest)
+        {
+            NodeData node = (NodeData) _nodesMap.get(src);
+            return node.getEdge(dest);
+        }
+        return null;
     }
 
-
-    /**
-     * adding the node to the graph
-     * @param n - the node data
-     */
     @Override
     public void addNode(node_data n) {
-        if (nodeMap.containsKey(n.getKey()))
-            throw new RuntimeException("The graph already contains Node with this key"+n.getKey());
-        nodeMap.put(n.getKey(),n);
-
+        if (!_nodesMap.containsKey(n.getKey()))
+        {
+            _nodesMap.put(n.getKey(), n);
+            _nodesList.add(n);
+            _MC++;
+        }
     }
 
-    /**
-     * connecting the src and dest with the weight to a edge in the graph
-     * @param src - the source of the edge.
-     * @param dest - the destination of the edge.
-     * @param w - positive weight representing the cost (aka time, price, etc) between src-->dest.
-     */
     @Override
     public void connect(int src, int dest, double w) {
-        EdgeData e = new EdgeData(src, dest, w);
-        connect(e);
-
-    }
-
-    /**
-     *
-     * @param e will be the actual edge without a copy
-     */
-
-    public void connect(EdgeData e){
-        NodeData n = (NodeData) nodeMap.get(e.getSrc());
-        if (n != null && nodeMap.get(e.getDest()) != null){
-            if (!n.containsKey(e.getDest())) {
-                sizeOfEdges++;
+        if (_nodesMap.containsKey(src) && _nodesMap.containsKey(dest) && w > 0 && src != dest)
+        {
+            NodeData srcNode = (NodeData) _nodesMap.get(src);
+            NodeData destNode = (NodeData) _nodesMap.get(dest);
+            if (!srcNode.hasEdge(dest))
+            {
+                EdgeData edge = new EdgeData(_nodesMap.get(src), _nodesMap.get(dest), w);
+                srcNode.addEdge(edge);
+                destNode.ReversEdge(edge);
+                _edgeSize++;
             }
-            n.put(e.getDest(), e);
-        }
-        else {
-            throw new RuntimeException("Can't connect unexist vertices ("
-                    +e.getSrc()+","+e.getDest()+"). The nodes are: "+getVnum());
         }
     }
-
-    /**
-     *
-     * @return set of the vertexes
-     */
-    public Collection<Integer> getVnum(){
-        return nodeMap.keySet();
-    }
-
-    /**
-     *
-     * @return collection of all the nodes in the graph
-     */
 
     @Override
     public Collection<node_data> getV() {
-        return nodeMap.values();
+        return _nodesList;
     }
-
-    /**
-     *
-     * @param node_id - when the all edges that returns starts
-     * @return collection of all edges with the given node id
-     */
 
     @Override
     public Collection<edge_data> getE(int node_id) {
-        NodeData n = (NodeData) nodeMap.get(node_id);
-        return n != null ? n.values() : null;
+        if (_nodesMap.containsKey(node_id))
+        {
+            NodeData node = (NodeData) _nodesMap.get(node_id);
+            return node.getEdgeCol();
+        }
+        LinkedList<edge_data> emptyList = new LinkedList<>();
+        return emptyList;
     }
 
-    /**
-     *
-     * @param key - the node id
-     * @return the data of the node that will be remove
-     */
+
 
     @Override
     public node_data removeNode(int key) {
-        node_data del = nodeMap.remove(key);
-        if (del != null){
-            sizeOfEdges -= ((NodeData)del).size();
-            for (Iterator<Integer> it = nodeMap.keySet().iterator(); it.hasNext();){
-                removeEdge(it.next(), key);
+        if (_nodesMap.containsKey(key))
+        {
+            NodeData node = (NodeData) _nodesMap.get(key);
+            Collection<edge_data> edges = node.getEdgeCol();
+            edge_data temp[] = edges.toArray(new edge_data[0]);
+            for(edge_data e : temp)
+            {
+                this.removeEdge(e.getSrc(),e.getDest());
             }
+            edges = node.getEdgeCol2();
+            temp = edges.toArray(new edge_data[0]);
+            for(edge_data e : temp)
+            {
+                this.removeEdge(e.getSrc(),e.getDest());
+            }
+            _nodesMap.remove(key);
+            _nodesList.remove(node);
+            _MC++;
+            return node;
         }
-        return del;
+        return null;
     }
-
-
-    /**
-     *
-     * @param src - the source of the edge
-     * @param dest - the destination of the edge
-     * @return the data of the edge that will be remove
-     */
 
     @Override
     public edge_data removeEdge(int src, int dest) {
-        NodeData srcEdge = (NodeData) nodeMap.get(src);
-        edge_data e = srcEdge != null ? srcEdge.remove(dest) : null;
-        if (e != null){
-            sizeOfEdges--;
+        if (_nodesMap.containsKey(src) && _nodesMap.containsKey(dest))
+        {
+            NodeData srcNode = (NodeData) _nodesMap.get(src);
+            NodeData destNode = (NodeData) _nodesMap.get(dest);
+            destNode.removeReversEdge(src);
+            _edgeSize--;
+            return srcNode.removeEdge(dest);
         }
-        return e;
+        return null;
     }
 
+    public Collection<edge_data> getE2(int node_id) {
+        if (_nodesMap.containsKey(node_id))
+        {
+            NodeData node = (NodeData) _nodesMap.get(node_id);
+            return node.getEdgeCol2();
+        }
+        LinkedList<edge_data> emptyList = new LinkedList<>();
+        return emptyList;
+    }
 
-    /**
-     *
-     * @return the size of nodes in the graph
-     */
 
     @Override
     public int nodeSize() {
-        return nodeMap.size();
+        return _nodesList.size();
     }
 
-    /**
-     *
-     * @return the size of edges in the graph
-     */
     @Override
     public int edgeSize() {
-        return sizeOfEdges;
+        return _edgeSize;
     }
 
-    /**
-     *
-     * @return the size of changes in the graph
-     */
     @Override
     public int getMC() {
-        return myMc;
+        return _MC;
     }
 
-    /**
-     *
-     * @return new DWGraph with the same node but all the edges are in opposite direction
-     */
-
-    public DWGraph_DS getReversCopy() {
-        DWGraph_DS copy = new DWGraph_DS();
-        //copy Nodes
-        for (Iterator<node_data> iterator = getV().iterator(); iterator.hasNext(); ) {
-            NodeData n = new NodeData((NodeData) iterator.next());
-            n.clear();
-            copy.addNode(n);
-        }
-
-        for (Iterator<node_data> itNodes = getV().iterator(); itNodes.hasNext();) {
-            NodeData n = (NodeData) itNodes.next();
-            for (Iterator<edge_data> itEdges = getE(n.getKey()).iterator(); itEdges.hasNext(); ) {
-                EdgeData e = (EdgeData) itEdges.next();
-                copy.connect(e.getReversEdge());
-            }
-        }
-        return copy;
-    }
-
-
-    /**
-     * Compare with another DWgraph by comparing the amount of edges and all the nodes.
-     */
-    @Override
-    public boolean equals(Object arg0){
-        if (arg0 == null || !(arg0 instanceof DWGraph_DS))
-            return false;
-        DWGraph_DS dwGraphDs = (DWGraph_DS) arg0;
-        return this.sizeOfEdges == dwGraphDs.sizeOfEdges && this.nodeMap.equals(dwGraphDs.nodeMap);
-    }
-
-    @Override
-    public String toString(){
-        StringBuffer sb = new StringBuffer();
-        sb.append(sizeOfEdges);
-        sb.append(":\n");
-        for (Iterator<node_data> it = nodeMap.values().iterator(); it.hasNext();){
-            sb.append(it.next() + "\n");
-        }
-        if (nodeMap.size() > 0){
-            sb.deleteCharAt(sb.length() - 1);
-        }
-        return sb.toString();
-    }
-
-
-
-   /* *//** a toString function for the graph.
+    /** a toString function for the graph.
      * prints the number of nodes edges in the graph,
      * along with a list of every node and his neighbors edges and tags.
      * @return
-     *//*
+     */
     public String toString(){
-        String sGraph = "nodes: "+nodeMap.size()+", edges: "+sizeOfEdges;
+        String sGraph = "nodes: "+ _nodesMap.size()+", edges: "+ _edgeSize;
         Collection<node_data> graphList = this.getV();
-
-        for(Iterator<node_data> node = graphList.iterator(); node.hasNext();)
+        for(node_data node : graphList)
         {
-            NodeData nodeI = (NodeData) node.next();
+            NodeData nodeI = (NodeData) node;
             sGraph += "\n" + nodeI.toString();
         }
         return sGraph;
     }
-*/
-
-
 
 
 }
+
+
