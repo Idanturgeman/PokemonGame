@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Ex2 implements Runnable{
 
-    private static Frame _win;
+    private static FrameData _win;
     private static Arena _ar;
     private static int _id = -1;
     private static int _scenario = 0;
@@ -24,7 +24,7 @@ public class Ex2 implements Runnable{
     public static void main(String[] a) {
         Thread client = new Thread(new Ex2());
         if(a.length == 0){
-            LoginPanel log = new LoginPanel();
+            listenerData log = new listenerData();
             log.loginPanel();
             while(log.isOpen()){
                 try {
@@ -83,10 +83,10 @@ public class Ex2 implements Runnable{
         String fs =  game.getPokemons();
         List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
         _ar.setPokemons(ffs);
-        Mover mover = new Mover(_ar,_graph,game,log.size());
+        moveData mover = new moveData(_ar,_graph,game,log.size());
         for(int i=0;i<log.size();i++) {
             CL_Agent ag = log.get(i);
-            Agent agent = new Agent(ag,game,mover);
+            AgentData agent = new AgentData(ag,game,mover);
             Thread thread = new Thread(agent);
             _agents.add(thread);
         }
@@ -100,7 +100,7 @@ public class Ex2 implements Runnable{
         _ar = new Arena();
         _ar.setGraph(_graph);
         _ar.setPokemons(Arena.json2Pokemons(fs));
-        _win = new Frame("Ex2", game);
+        _win = new FrameData("Ex2", game);
         _win.setSize(1000, 700);
         _win.update(_ar);
 

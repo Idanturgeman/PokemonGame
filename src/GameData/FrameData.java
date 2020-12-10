@@ -21,13 +21,13 @@ import java.util.List;
  * code and not to take it "as is".
  *
  */
-public class Frame extends JFrame{
+public class FrameData extends JFrame{
     private Arena _ar;
     private gameClient.util.Range2Range _w2f;
     private game_service _game;
     private Image graphImg;
 
-    Frame(String a, game_service game) {
+    FrameData(String a, game_service game) {
         super(a);
         _game = game;
     }

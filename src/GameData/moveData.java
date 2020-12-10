@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-public class Mover {
+public class moveData {
 
     private static Arena _ar;
     private CL_Agent _agent;
@@ -23,7 +23,7 @@ public class Mover {
     private int _reset = 0;
 
 
-    public Mover(Arena ar, directed_weighted_graph graph, game_service game, int numOfAgents){
+    public moveData(Arena ar, directed_weighted_graph graph, game_service game, int numOfAgents){
         _ar = ar;
         _graph = graph;
         _game = game;
