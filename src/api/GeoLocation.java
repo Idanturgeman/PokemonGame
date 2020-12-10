@@ -2,11 +2,25 @@ package api;
 
 public class GeoLocation implements geo_location {
 
-    private double _x, _y, _z;
+    private double _x;
+    private double _y;
+    private double _z;
 
     public GeoLocation(double x, double y, double z){
+        setX(x);
+        setY(y);
+        setZ(z);
+    }
+
+    public void setX(double x){
         _x = x;
+    }
+
+    public void setY(double y){
         _y = y;
+    }
+
+    public void setZ(double z){
         _z = z;
     }
 

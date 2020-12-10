@@ -6,10 +6,11 @@ import java.util.LinkedList;
 
 public class DWGraph_DS implements directed_weighted_graph {
 
+    private int _MC = 0;
+    private int _edgeSize = 0;
     private HashMap<Integer, node_data> _nodesMap = new HashMap<>();
     private LinkedList<node_data> _nodesList = new LinkedList<>();
-    private int _edgeSize = 0;
-    private int _MC = 0;
+
 
     @Override
     public node_data getNode(int key) {

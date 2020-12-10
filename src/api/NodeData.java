@@ -6,15 +6,18 @@ import java.util.LinkedList;
 
 public class NodeData implements node_data{
 
-    private int _key;
-    private double _weight = 0;
-    private int _tag = 0;
-    private String _info;
-    private geo_location _geoLo = new GeoLocation(0,0,0);
     private HashMap<Integer, edge_data> _srcE = new HashMap<>();
     private HashMap<Integer, edge_data> _destE = new HashMap<>();
     private LinkedList<edge_data> _edges = new LinkedList<>();
     private LinkedList<edge_data> _edges2 = new LinkedList<>();
+
+    private geo_location _geoLo = new GeoLocation(0,0,0);
+
+    private int _key;
+    private double _weight = 0;
+    private int _tag = 0;
+    private String _info;
+
 
     public NodeData(int key){
         setKey(key);
