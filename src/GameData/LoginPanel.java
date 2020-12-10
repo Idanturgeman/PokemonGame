@@ -1,5 +1,6 @@
 package GameData;
 
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,6 +17,7 @@ public class LoginPanel implements ActionListener {
     private static JFrame login;
 
     public static void main(String[] a){
+        //  loginPanel();
     }
 
     public static void loginPanel(){
@@ -23,6 +25,7 @@ public class LoginPanel implements ActionListener {
         login = new JFrame();
         login.setSize(330,160);
         panel.setLayout(null);
+        // login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login.add(panel);
         JLabel user = new JLabel("User:");
         user.setBounds(10,20,80,25);
@@ -34,8 +37,7 @@ public class LoginPanel implements ActionListener {
         _userTxt.setBounds(100,20,165,25);
 
         String scenes[] = new String[24];
-        for(int i = 0; i < 24; i++)
-        {
+        for(int i = 0; i < 24; i++){
             scenes[i] = String.valueOf(i);
         }
         _sceneNum = new JComboBox(scenes);
@@ -60,28 +62,22 @@ public class LoginPanel implements ActionListener {
     }
 
     public void actionPerformed(ActionEvent e){
-        if(e.getSource() == _sceneNum)
-        {
+        if(e.getSource() == _sceneNum){
             int scenario = _sceneNum.getSelectedIndex();
             _scenario = scenario;
         }
-        if(e.getSource() == _freePlay)
-        {
+        if(e.getSource() == _freePlay){
             _open = false;
         }
-        if(e.getSource() == _loginButton)
-        {
-            try
-            {
+        if(e.getSource() == _loginButton){
+            try{
                 int id = Integer.parseInt(_userTxt.getText());
-                if(id > 0)
-                {
+                if(id > 0){
                     _id = id;
                     _open = false;
                 }
             }
-            catch (Exception ex)
-            {
+            catch (Exception ex){
             }
         }
     }
