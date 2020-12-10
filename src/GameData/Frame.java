@@ -1,5 +1,9 @@
 package GameData;
 
+import api.directed_weighted_graph;
+import api.edge_data;
+import api.geo_location;
+import api.node_data;
 import gameClient.Arena;
 import gameClient.CL_Agent;
 import gameClient.CL_Pokemon;

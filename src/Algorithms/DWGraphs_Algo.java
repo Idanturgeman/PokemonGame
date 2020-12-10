@@ -31,7 +31,7 @@ public class DWGraphs_Algo implements dw_graph_algorithms {
     }
 
     @Override
-    public directed_weighted_graph copy() {
+    public api.directed_weighted_graph copy() {
         DWGraph_DS newGr = new DWGraph_DS();
         List<node_data> nodes = (List<node_data>) _myGraph.getV();
         for(Iterator<node_data> node = nodes.iterator(); node.hasNext();)
@@ -294,7 +294,7 @@ public class DWGraphs_Algo implements dw_graph_algorithms {
     }
 
 
-    public DWGraph_DS copy(directed_weighted_graph temp){
+    public DWGraph_DS copy(api.directed_weighted_graph temp){
         DWGraph_DS newGr = new DWGraph_DS();
         List<node_data> nodes = (List<node_data>) temp.getV();
         for(Iterator<node_data> node = nodes.iterator(); node.hasNext();)

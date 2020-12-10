@@ -3,11 +3,13 @@
  */
 package gameClient.util;
 
+import api.geo_location;
+
 import java.io.Serializable;
 
 public class Point3D implements geo_location, Serializable{
-	private static final long serialVersionUID = 1L;
-	/**
+    private static final long serialVersionUID = 1L;
+    /**
      * Simple set of constants - should be defined in a different class (say class Constants).*/
     public static final double EPS1 = 0.001, EPS2 = Math.pow(EPS1,2), EPS=EPS2;
     /**
@@ -22,19 +24,19 @@ public class Point3D implements geo_location, Serializable{
     }
 
     public Point3D(Point3D p) {
-       this(p.x(), p.y(), p.z());
+        this(p.x(), p.y(), p.z());
     }
     public Point3D(double x, double y) {this(x,y,0);}
     public Point3D(String s) { try {
-            String[] a = s.split(",");
-            _x = Double.parseDouble(a[0]);
-            _y = Double.parseDouble(a[1]);
-            _z = Double.parseDouble(a[2]);
-        }
-        catch(IllegalArgumentException e) {
-            System.err.println("ERR: got wrong format string for POint3D init, got:"+s+"  should be of format: x,y,x");
-            throw(e);
-        }
+        String[] a = s.split(",");
+        _x = Double.parseDouble(a[0]);
+        _y = Double.parseDouble(a[1]);
+        _z = Double.parseDouble(a[2]);
+    }
+    catch(IllegalArgumentException e) {
+        System.err.println("ERR: got wrong format string for POint3D init, got:"+s+"  should be of format: x,y,x");
+        throw(e);
+    }
     }
     @Override
     public double x() {return _x;}
@@ -54,11 +56,6 @@ public class Point3D implements geo_location, Serializable{
         return Math.sqrt(t);
     }
 
-    @Override
-    public double distance2D(geo_location cr) {
-        return 0;
-    }
-
     public boolean equals(Object p) {
         if(p==null || !(p instanceof geo_location)) {return false;}
         Point3D p2 = (Point3D)p;
@@ -69,9 +66,8 @@ public class Point3D implements geo_location, Serializable{
     public boolean equalsXY (Point3D p)
     {return p._x == _x && p._y == _y;}
 
-     public String toString(boolean all) {
+    public String toString(boolean all) {
         if(all) return "[" + _x + "," +_y+","+_z+"]";
         else return "[" + (int)_x + "," + (int)_y+","+(int)_z+"]";
     }
 }
-
