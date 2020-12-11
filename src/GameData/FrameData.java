@@ -38,6 +38,49 @@ public class FrameData extends JFrame implements ActionListener{
     private static JFrame login;
 
 
+    public void actionPerformed(ActionEvent e){
+        if(e.getSource() == _sceneNum){
+            int scenario = _sceneNum.getSelectedIndex();
+            _scenario = scenario;
+        }
+        if(e.getSource() == _freePlay){
+            _open = false;
+        }
+        if(e.getSource() == _loginButton){
+            try{
+                int id = Integer.parseInt(_userTxt.getText());
+                if(id > 0){
+                    _id = id;
+                    _open = false;
+                }
+            }
+            catch (Exception ex){
+            }
+        }
+    }
+
+
+    public void dispose(){
+        login.dispose();
+    }
+
+    public boolean isOpen() {
+        return _open;
+    }
+
+    public int getID(){
+        return _id;
+    }
+
+    public int getScenario(){
+        return _scenario;
+    }
+
+
+    FrameData(){}
+
+
+
     FrameData(String a, game_service game) {
         super(a);
         _game = game;
@@ -68,26 +111,7 @@ public class FrameData extends JFrame implements ActionListener{
     }
 
 
-    public void actionPerformed(ActionEvent e){
-        if(e.getSource() == _sceneNum){
-            int scenario = _sceneNum.getSelectedIndex();
-            _scenario = scenario;
-        }
-        if(e.getSource() == _freePlay){
-            _open = false;
-        }
-        if(e.getSource() == _loginButton){
-            try{
-                int id = Integer.parseInt(_userTxt.getText());
-                if(id > 0){
-                    _id = id;
-                    _open = false;
-                }
-            }
-            catch (Exception ex){
-            }
-        }
-    }
+
 
 
     @Override
@@ -234,23 +258,9 @@ public class FrameData extends JFrame implements ActionListener{
         login.setVisible(true);
     }
 
-    FrameData(){}
 
 
 
-    public void dispose(){
-        login.dispose();
-    }
 
-    public boolean isOpen() {
-        return _open;
-    }
 
-    public int getID(){
-        return _id;
-    }
-
-    public int getScenario(){
-        return _scenario;
-    }
 }
