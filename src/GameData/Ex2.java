@@ -99,7 +99,7 @@ public class Ex2 implements Runnable{
         String fs =  game.getPokemons();                     //set pokemons
         List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
         _ar.setPokemons(ffs);
-        Mover mover = new Mover(_ar,_graph,game,log.size()); //the object responsible to move the agents
+        MoveData mover = new MoveData(_ar,_graph,game,log.size()); //the object responsible to move the agents
         for(int i=0;i<log.size();i++) {                      //initialize the agents' threads
             CL_Agent ag = log.get(i);
             Agent agent = new Agent(ag,game,mover);

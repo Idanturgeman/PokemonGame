@@ -11,7 +11,7 @@ import java.util.HashSet;
  *  position and sleep until the agent is calculated to
  *  reach is goal. runs until the game ends
  */
-public class Agent implements Runnable {
+class Agent implements Runnable {
 
     private CL_Agent _agent;           //game agent
     private CL_Pokemon _prevPok;       //previous targeted pokemon
