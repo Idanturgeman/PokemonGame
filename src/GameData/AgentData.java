@@ -46,7 +46,7 @@ class Agent implements Runnable {
             if(reset == 100){
                 whiteList.clear();
             }
-            try {                       
+            try {
                 Thread.sleep(dt);
             }
             catch(Exception e) {
