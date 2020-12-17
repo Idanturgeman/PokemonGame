@@ -1,11 +1,16 @@
 package GameData;
 
 
+import Algorithms.DWGraphs_Algo;
 import Server.Game_Server_Ex2;
 import api.*;
+import gameClient.Arena;
+import gameClient.CL_Agent;
+import gameClient.CL_Pokemon;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +22,7 @@ import java.util.List;
  */
 public class Ex2 implements Runnable{
 
-    private static Frame _win;                                     //game window
+    private static FrameData _win;                                     //game window
     private static Arena _ar;                                      //game arena
     private static long _id = -1;                                  //login id
     private static int _scenario = 0;                              //game level [0,23]
@@ -31,8 +36,8 @@ public class Ex2 implements Runnable{
     public static void main(String[] a) {
         Thread client = new Thread(new Ex2());
         if(a.length == 0){                         //check if there are given arguments
-            LoginPanel log = new LoginPanel();
-            log.loginPanel();                      //launches the login GUI
+            FrameData log = new FrameData();
+            log.frameData();                      //launches the login GUI
             while(log.isOpen()){                   //wait for the user to choose his options
                 try {
                     Thread.sleep(10);
@@ -112,7 +117,7 @@ public class Ex2 implements Runnable{
         _ar = new Arena();                       //set game arena
         _ar.setGraph(_graph);
         _ar.setPokemons(Arena.json2Pokemons(fs));
-        _win = new Frame("Ex2", game, _scenario);        //set game GUI
+        _win = new FrameData("Ex2", game, _scenario);        //set game GUI
         _win.setSize(1000, 700);
         _win.update(_ar);
         _win.show();

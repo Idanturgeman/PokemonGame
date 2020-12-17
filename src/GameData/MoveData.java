@@ -1,5 +1,9 @@
 package GameData;
+import Algorithms.DWGraphs_Algo;
 import api.*;
+import gameClient.Arena;
+import gameClient.CL_Agent;
+import gameClient.CL_Pokemon;
 
 import java.util.HashSet;
 import java.util.List;
@@ -9,7 +13,7 @@ import java.util.List;
  * score as high as possible. the class contains "libraries"
  * in form of Hash data structures for every agent data.
  */
-public class Mover {
+public class MoveData {
 
     private static Arena _ar;      //game arena
     private CL_Agent _agent;       //the agent being worked on
@@ -26,14 +30,14 @@ public class Mover {
     private static int _AC;  //the count of agents
 
     /** constructor of mover. sets all the data from the agents */
-    public Mover(Arena ar, directed_weighted_graph graph, game_service game, int numOfAgents){
+    public MoveData(Arena ar, directed_weighted_graph graph, game_service game, int numOfAgents){
         _ar = ar;
         _graph = graph;
         _game = game;
         _AC = numOfAgents;
         _blackList = new HashSet<>();
         _graphAlgo = new DWGraphs_Algo(new DWGraph_DS());
-        DWGraph_DS temp = _graphAlgo.caster(_graph);
+        DWGraph_DS temp = _graphAlgo.copy(_graph);
         _graphAlgo.init(temp);
     }
 
