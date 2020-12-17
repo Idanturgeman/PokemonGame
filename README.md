@@ -32,4 +32,4 @@ $ git clone https://github.com/Idanturjeman/PackmanGame.git
 
 ### In addition
 
-For more [information](https://github.com/Idanturjeman/PokemonGame/wiki) on this project.
+**For more [information](https://github.com/Idanturjeman/PokemonGame/wiki) on this project.**
