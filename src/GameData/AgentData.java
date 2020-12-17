@@ -13,14 +13,14 @@ import java.util.HashSet;
  */
 class Agent implements Runnable {
 
-    private CL_Agent _agent;           //game agent
-    private CL_Pokemon _prevPok;       //previous targeted pokemon
-    private edge_data _prevEdge;       //the previous edge the agent visited
-    private HashSet<String> whiteList; //list of pokemon that are allowed to be targeted
-    private static game_service _game; //game service
-    private static MoveData _mover;       //the mover object
-    private boolean _inSight = false;  //a flag for if there is a pokemon in front of the agent
-    private int reset = 0;             //a reset for managing congestion
+    private CL_Agent _agent;
+    private CL_Pokemon _prevPok;
+    private edge_data _prevEdge;
+    private HashSet<String> whiteList;
+    private static game_service _game;
+    private static MoveData _mover;
+    private boolean _inSight = false;
+    private int reset = 0;
 
     /** agent's constructor. initialize all variables
      * @param agent the CL_Agent that the Agent is managing.
@@ -41,12 +41,12 @@ class Agent implements Runnable {
     public void run() {
         long dt;
         while(_game.isRunning()){
-            dt = _mover.init(this, _agent);   //tell the agent to move and receives
+            dt = _mover.init(this, _agent);
             reset++;
-            if(reset == 100){     //reached cap reset the whiteList
+            if(reset == 100){
                 whiteList.clear();
             }
-            try {                       //sleeping time to reduce unnecessary movement calls
+            try {                       
                 Thread.sleep(dt);
             }
             catch(Exception e) {
