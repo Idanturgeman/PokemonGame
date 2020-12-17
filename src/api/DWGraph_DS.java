@@ -107,8 +107,11 @@ public class DWGraph_DS implements directed_weighted_graph {
             NodeData srcNode = (NodeData) _nodesMap.get(src);
             NodeData destNode = (NodeData) _nodesMap.get(dest);
             destNode.removeReversEdge(src);
-            _edgeSize--;
-            return srcNode.removeEdge(dest);
+            edge_data edgeData = srcNode.removeEdge(dest);
+            if (edgeData != null){
+                _edgeSize--;
+            }
+            return edgeData;
         }
         return null;
     }
