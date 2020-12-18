@@ -84,6 +84,18 @@ public class FrameData extends JFrame implements ActionListener{
         login.setVisible(true);
     }
 
+    /** a constructor fpr initializing the frame variables.
+     * @param a the name of the frame.
+     * @param game the game service object.
+     * @param level the current level.
+     */
+    FrameData(String a, game_service game, int level) {
+        super(a);
+        setGameService(game);
+        setScenario(level);
+    }
+
+
     public void actionPerformed(ActionEvent e){
         if(e.getSource() == _sceneNum){
             int scenario = _sceneNum.getSelectedIndex();
@@ -113,26 +125,10 @@ public class FrameData extends JFrame implements ActionListener{
         return _open;
     }
 
-    public long getID(){
-        return _id;
-    }
-
-    public int getScenario(){
-        return _scenarioOfLis;
-    }
 
 
 
-    /** a constructor fpr initializing the frame variables.
-     * @param a the name of the frame.
-     * @param game the game service object.
-     * @param level the current level.
-     */
-    FrameData(String a, game_service game, int level) {
-        super(a);
-        _game = game;
-        _scenario = level;
-    }
+
 
     /** updates the frame..
      *  resizing the graph to the current size of the frame window.
@@ -273,6 +269,29 @@ public class FrameData extends JFrame implements ActionListener{
         geo_location d0 = this._w2f.world2frame(d);
         g.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
     }
+
+//////////////////////////Getters and Setters////////////////////////////////////////////////////////////////
+
+    public void setArena(Arena arena){
+        _ar = arena;
+    }
+
+    public void setScenario(int scenario){
+        _scenario = scenario;
+    }
+
+    public void setGameService(game_service game){
+        _game = game;
+    }
+
+    public long getID(){
+        return _id;
+    }
+
+    public int getScenario(){
+        return _scenarioOfLis;
+    }
+
 }
 
 
