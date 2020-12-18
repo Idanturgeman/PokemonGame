@@ -23,7 +23,7 @@ public class MoveData {
     private CL_Pokemon _prevPok;
     private edge_data _prevEdge;
     private static HashSet<String> _blackList;
-    private static Collection<String> _whiteList;
+    private static HashSet<String> _whiteList;
     private static directed_weighted_graph _graph;
     private static DWGraphs_Algo _graphAlgo;
     private static game_service _game;

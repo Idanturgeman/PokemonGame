@@ -14,7 +14,7 @@ import java.util.HashSet;
  */
 class AgentData implements Runnable {
 
-    private Collection<String> list;
+    private HashSet<String> list;
 
     private static game_service gameService;
     private static MoveData _mover;
@@ -109,7 +109,7 @@ class AgentData implements Runnable {
     }
 
 
-    public Collection<String> getList() {
+    public HashSet<String> getList() {
         return list;
     }
 
