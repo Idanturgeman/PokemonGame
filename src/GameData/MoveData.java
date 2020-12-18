@@ -17,7 +17,7 @@ public class MoveData {
 
     private static Arena _ar;
     private CL_Agent _agent;
-    private Agent _agT;
+    private AgentData _agT;
     private CL_Pokemon _pokemon;
     private CL_Pokemon _prevPok;
     private edge_data _prevEdge;
@@ -47,7 +47,7 @@ public class MoveData {
      * @param agent the mover is currently working on.
      * @return the sleeping time of the agent.
      */
-    public synchronized int init(Agent thread, CL_Agent agent){
+    public synchronized int init(AgentData thread, CL_Agent agent){
         _agent = agent;
         _agT = thread;
         _prevEdge = thread.getPrevEdge();

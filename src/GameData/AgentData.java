@@ -11,7 +11,7 @@ import java.util.HashSet;
  *  position and sleep until the agent is calculated to
  *  reach is goal. runs until the game ends
  */
-class Agent implements Runnable {
+class AgentData implements Runnable {
 
     private CL_Agent _agent;
     private CL_Pokemon _prevPok;
@@ -26,8 +26,9 @@ class Agent implements Runnable {
      * @param agent the CL_Agent that the Agent is managing.
      * @param game the main game service.
      * @param mover the agent moving algorithm.
+     *
      */
-    public Agent(CL_Agent agent, game_service game, MoveData mover){
+    public AgentData(CL_Agent agent, game_service game, MoveData mover){
         _agent = agent;
         _game = game;
         _mover = mover;

@@ -269,7 +269,7 @@ public class FrameData extends JFrame implements ActionListener{
         directed_weighted_graph gg = _ar.getGraph();
         geo_location s = gg.getNode(e.getSrc()).getLocation();
         geo_location d = gg.getNode(e.getDest()).getLocation();
-        geo_location s0 = this._w2f.world2frame(s);                 
+        geo_location s0 = this._w2f.world2frame(s);
         geo_location d0 = this._w2f.world2frame(d);
         g.drawLine((int)s0.x(), (int)s0.y(), (int)d0.x(), (int)d0.y());
     }
