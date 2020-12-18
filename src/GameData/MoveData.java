@@ -5,7 +5,6 @@ import gameClient.Arena;
 import gameClient.CL_Agent;
 import gameClient.CL_Pokemon;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -16,78 +15,47 @@ import java.util.List;
  */
 public class MoveData {
 
-    private static Arena _ar;
-    private CL_Agent _agent;
-    private AgentData _agT;
+    private static HashSet<String> _firstList;
+    private static HashSet<String> _secondList;
+
     private CL_Pokemon _pokemon;
-    private CL_Pokemon _prevPok;
-    private edge_data _prevEdge;
-    private static HashSet<String> _blackList;
-    private static HashSet<String> _whiteList;
+    private CL_Pokemon priorPokemon;
+    private edge_data priorEdge;
+    private static Arena arena;
+    private CL_Agent _agent;
+    private AgentData agentData;
+
     private static directed_weighted_graph _graph;
     private static DWGraphs_Algo _graphAlgo;
-    private static game_service _game;
-    private static int _reset = 0;
-    private static int _AC;
+    private static game_service gameService;
 
-    /** constructor of mover. sets all the data from the agents */
+    private static int z = 0;
+    private static int check;
+
+    private void listToZero(){
+        _firstList.clear();
+        z = 0;
+    }
+
+
+
     public MoveData(Arena ar, directed_weighted_graph graph, game_service game, int numOfAgents){
-        _ar = ar;
+        arena = ar;
         setGraph(graph);
         setGameService(game);
-        _AC = numOfAgents;
-        _blackList = new HashSet<>();
+        check = numOfAgents;
+        _firstList = new HashSet<>();
         _graphAlgo = new DWGraphs_Algo(new DWGraph_DS());
         DWGraph_DS temp = _graphAlgo.copy(_graph);
         _graphAlgo.init(temp);
     }
 
-    /** the central method of mover.
-     *  moves the agents, check for congestions
-     *  and check if an agent is stuck or without nodes.
-     * @param agent the mover is currently working on.
-     * @return the sleeping time of the agent.
-     */
-    public synchronized int init(AgentData thread, CL_Agent agent){
-        setAgentData(thread);
-        setAgent(agent);
-        _prevEdge = thread.getPriorEdge();
-        _prevPok = thread.getPriorPokemon();
-        _whiteList = thread.getList();
-        int nextNode = moveAgents();
-        if(_reset == 100* _AC)
-        {
-            resetLists();
-        }
-        double slpTime = 100;
-        try
-        {
-            slpTime = getTime(nextNode);
-        }
-        catch (NullPointerException ne)
-        {
-            try
-            {
-                resetLists();
-                slpTime = 0;
-                if(nextNode(_agent.getSrcNode()) == -1)
-                {
-                    wait();
-                }
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        return (int) slpTime;
-    }
 
-    /** calculate the sleeping time of the agents according to their targets.
+    /** calculate the time of the agents according to their targets.
      * @param nextNode the next node the agent is supposed to move to
      * @return the time the agent need to sleep
      */
-    private long getTime(int nextNode){
+    private long checkOnClock(int nextNode){
         int currNode = _agent.getSrcNode();
         edge_data pokEdge = _pokemon.get_edge();
         edge_data currEdge = _graph.getEdge(currNode,nextNode);
@@ -105,22 +73,22 @@ public class MoveData {
             double ratio = dist2Pok/edgeDist;
             weight = pokEdge.getWeight();
             weight *= ratio;
-            _agT.setPriorEdge(currEdge);
-            _agT.setPriorPokemon(_pokemon);
+            agentData.setPriorEdge(currEdge);
+            agentData.setPriorPokemon(_pokemon);
         }
-        else if(_prevEdge != null && _prevEdge.getDest() == _prevPok.get_edge().getDest() && _prevEdge.getSrc() == _prevPok.get_edge().getSrc())
+        else if(priorEdge != null && priorEdge.getDest() == priorPokemon.get_edge().getDest() && priorEdge.getSrc() == priorPokemon.get_edge().getSrc())
         {
             notifyAll();
-            weight = _prevEdge.getWeight();
-            currNode = _graph.getNode(_prevEdge.getSrc()).getKey();
-            nextNode = _graph.getNode(_prevEdge.getDest()).getKey();
+            weight = priorEdge.getWeight();
+            currNode = _graph.getNode(priorEdge.getSrc()).getKey();
+            nextNode = _graph.getNode(priorEdge.getDest()).getKey();
             srcNodePos = _graph.getNode(currNode).getLocation();
             destNodePos = _graph.getNode(nextNode).getLocation();
             edgeDist = srcNodePos.distance(destNodePos);
             double dist2Dest = destNodePos.distance(_agent.getLocation());
             double ratio = dist2Dest/edgeDist;
             weight *= ratio;
-            _agT.setPriorEdge(_pokemon.get_edge());
+            agentData.setPriorEdge(_pokemon.get_edge());
         }
         weight *= 1000;
         double slpTime = weight/speed;
@@ -128,24 +96,64 @@ public class MoveData {
         return (long) slpTime;
     }
 
+
+    /** the central method of mover.
+     * @param agent the mover is currently working on.
+     * @return the sleeping time of the agent.
+     */
+    public synchronized int init(AgentData thread, CL_Agent agent){
+        setAgentData(thread);
+        setAgent(agent);
+        priorEdge = thread.getPriorEdge();
+        priorPokemon = thread.getPriorPokemon();
+        _secondList = thread.getList();
+        int nextNode = moveAgents();
+        if(z == 100* check)
+        {
+            listToZero();
+        }
+        double slpTime = 100;
+        try
+        {
+            slpTime = checkOnClock(nextNode);
+        }
+        catch (NullPointerException ne)
+        {
+            try
+            {
+                listToZero();
+                slpTime = 0;
+                if(nextNode(_agent.getSrcNode()) == -1)
+                {
+                    wait();
+                }
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return (int) slpTime;
+    }
+
     /** communicate with the server to move and get
      * current position of elements on the graph.
      * @return the next node in the path of the agent
      */
     private int moveAgents() {
-        String lg = _game.move();
+        String lg = gameService.move();
         List<CL_Agent> log = Arena.getAgents(lg, _graph);
-        _ar.setAgents(log);
-        String fs = _game.getPokemons();
+        arena.setAgents(log);
+        String fs = gameService.getPokemons();
         List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
-        _ar.setPokemons(ffs);
+        arena.setPokemons(ffs);
         _agent = log.get(_agent.getID());
-        _agT.setAgent(_agent);
+        agentData.setAgent(_agent);
         int id = _agent.getID();
         int src = _agent.getSrcNode();
         double v = _agent.getValue();
         int dest = this.nextNode(src);
-        _game.chooseNextEdge(_agent.getID(), dest);
+        gameService.chooseNextEdge(_agent.getID(), dest);
         if(_agent.getNextNode() == -1)
         {
             System.out.println("Agent: " + id + ", val: " + v + "   turned to node: " + dest);
@@ -153,48 +161,20 @@ public class MoveData {
         return dest;
     }
 
-    /** calculate the path of the agent.
-     * @param src the starting node of the agent
-     * @return the next node the agent's path
-     */
-    private int nextNode(int src) {
-        int ans = -1;
-        List<CL_Pokemon> pokes = _ar.getPokemons();
-        int finalDest = findPkm(pokes, src);
-        if(_agT.getFlag())
-        {
-            _agT.setFlag(false);
-            for(int i = 0; i < _AC-1; i++)
-            {
-                reserveNextPok(pokes, finalDest);
-            }
-            return finalDest;
-        }
-        List<node_data> path = _graphAlgo.shortestPath(src, finalDest);
-        for(int i = 0; i < _AC-1; i++)
-        {
-            reserveNextPok(pokes, finalDest);
-        }
-        if(path != null)
-        {
-            path.remove(0);
-            ans = path.get(0).getKey();
-        }
-        return ans;
-    }
+
 
     /** finds the closet pokemon with the highest value and reserve it.
      * @param pokes a list of all current pokemon on the graph.
      * @param src the node that the agent is currently on.
      * @return the node on which the pokemon is on
      */
-    private int findPkm(List<CL_Pokemon> pokes, int src) {
+    private int checkPokemon(List<CL_Pokemon> pokes, int src) {
         int ans = -1;
         double minDist = Integer.MAX_VALUE;
         for (CL_Pokemon pok : pokes)
         {
             String pos = pok.getLocation().toString();
-            if(!_blackList.contains(pos) || _whiteList.contains(pos))
+            if(!_firstList.contains(pos) || _secondList.contains(pos))
             {
                 edge_data edge = pok.get_edge();
                 int edgeSrc = edge.getSrc();
@@ -202,7 +182,7 @@ public class MoveData {
                 double value = edge.getWeight();
                 if (edgeSrc == src)
                 {
-                    _agT.setFlag(true);
+                    agentData.setFlag(true);
                     _pokemon = pok;
                     return edgeDest;
                 }
@@ -222,9 +202,9 @@ public class MoveData {
         }
         if(_pokemon != null)
         {
-            _blackList.add(_pokemon.getLocation().toString());
-            _whiteList.add(_pokemon.getLocation().toString());
-            _reset++;
+            _firstList.add(_pokemon.getLocation().toString());
+            _secondList.add(_pokemon.getLocation().toString());
+            z++;
         }
         return ans;
     }
@@ -234,13 +214,13 @@ public class MoveData {
      * @param pokes list of all the pokemon currently on the graph.
      * @param src the node of the agent.
      */
-    private void reserveNextPok(List<CL_Pokemon> pokes, int src) {
+    private void findNextPokemon(List<CL_Pokemon> pokes, int src) {
         double minDist = Integer.MAX_VALUE;
         CL_Pokemon pokemon = null;
         for (CL_Pokemon pok : pokes)
         {
             String pos = pok.getLocation().toString();
-            if(!_blackList.contains(pos) || _whiteList.contains(pos))
+            if(!_firstList.contains(pos) || _secondList.contains(pos))
             {
                 edge_data edge = pok.get_edge();
                 int edgeSrc = edge.getSrc();
@@ -260,16 +240,43 @@ public class MoveData {
         }
         if(pokemon != null)
         {
-            _blackList.add(pokemon.getLocation().toString());
-            _whiteList.add(pokemon.getLocation().toString());
-            _reset++;
+            _firstList.add(pokemon.getLocation().toString());
+            _secondList.add(pokemon.getLocation().toString());
+            z++;
         }
     }
 
-    private void resetLists(){
-        _blackList.clear();
-        _reset = 0;
+    /** calculate the path of the agent.
+     * @param src the starting node of the agent
+     * @return the next node the agent's path
+     */
+    private int nextNode(int src) {
+        int ans = -1;
+        List<CL_Pokemon> pokes = arena.getPokemons();
+        int finalDest = checkPokemon(pokes, src);
+        if(agentData.getFlag())
+        {
+            agentData.setFlag(false);
+            for(int i = 0; i < check -1; i++)
+            {
+                findNextPokemon(pokes, finalDest);
+            }
+            return finalDest;
+        }
+        List<node_data> path = _graphAlgo.shortestPath(src, finalDest);
+        for(int i = 0; i < check -1; i++)
+        {
+            findNextPokemon(pokes, finalDest);
+        }
+        if(path != null)
+        {
+            path.remove(0);
+            ans = path.get(0).getKey();
+        }
+        return ans;
     }
+
+
 
 /////////////////////////////////Getters and Setters/////////////////////////////////////////////////////////
 
@@ -278,7 +285,7 @@ public class MoveData {
     }
 
     public void setAgentData(AgentData agentData){
-        _agT = agentData;
+        this.agentData = agentData;
     }
 
     public void setPokemon(CL_Pokemon pokemon){
@@ -286,10 +293,10 @@ public class MoveData {
     }
 
     public void setPriorPokemon(CL_Pokemon pokemon){
-        _prevPok = pokemon;
+        priorPokemon = pokemon;
     }
     public void setPriorEdge(edge_data edge){
-        _prevEdge = edge;
+        priorEdge = edge;
     }
 
     public void setGraph(directed_weighted_graph graph){
@@ -301,7 +308,7 @@ public class MoveData {
     }
 
     public void setGameService(game_service game){
-        _game = game;
+        gameService = game;
     }
 
 }
