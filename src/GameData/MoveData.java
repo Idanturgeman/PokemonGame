@@ -5,6 +5,7 @@ import gameClient.Arena;
 import gameClient.CL_Agent;
 import gameClient.CL_Pokemon;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class MoveData {
     private CL_Pokemon _prevPok;
     private edge_data _prevEdge;
     private static HashSet<String> _blackList;
-    private static HashSet<String> _whiteList;
+    private static Collection<String> _whiteList;
     private static directed_weighted_graph _graph;
     private static DWGraphs_Algo _graphAlgo;
     private static game_service _game;
@@ -50,9 +51,9 @@ public class MoveData {
     public synchronized int init(AgentData thread, CL_Agent agent){
         _agent = agent;
         _agT = thread;
-        _prevEdge = thread.getPrevEdge();
-        _prevPok = thread.getPrevPok();
-        _whiteList = thread.getWhiteList();
+        _prevEdge = thread.getPriorEdge();
+        _prevPok = thread.getPriorPokemon();
+        _whiteList = thread.getList();
         int nextNode = moveAgents();
         if(_reset == 100* _AC){
             resetLists();
@@ -97,8 +98,8 @@ public class MoveData {
             double ratio = dist2Pok/edgeDist;
             weight = pokEdge.getWeight();
             weight *= ratio;
-            _agT.setPrevEdge(currEdge);
-            _agT.setPrevPok(_pokemon);
+            _agT.setPriorEdge(currEdge);
+            _agT.setPriorPokemon(_pokemon);
         }
         else if(_prevEdge != null && _prevEdge.getDest() == _prevPok.get_edge().getDest() && _prevEdge.getSrc() == _prevPok.get_edge().getSrc()){
             notifyAll();
@@ -111,7 +112,7 @@ public class MoveData {
             double dist2Dest = destNodePos.distance(_agent.getLocation());
             double ratio = dist2Dest/edgeDist;
             weight *= ratio;
-            _agT.setPrevEdge(_pokemon.get_edge());
+            _agT.setPriorEdge(_pokemon.get_edge());
         }
         weight *= 1000;
         double slpTime = weight/speed;

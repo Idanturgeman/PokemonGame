@@ -4,6 +4,7 @@ import api.*;
 import gameClient.CL_Agent;
 import gameClient.CL_Pokemon;
 
+import java.util.Collection;
 import java.util.HashSet;
 
 /** the class is Runnable object for CL_Agent class.
@@ -13,26 +14,29 @@ import java.util.HashSet;
  */
 class AgentData implements Runnable {
 
-    private CL_Agent _agent;
-    private CL_Pokemon _prevPok;
-    private edge_data _prevEdge;
-    private HashSet<String> whiteList;
-    private static game_service _game;
+    private Collection<String> list;
+
+    private static game_service gameService;
     private static MoveData _mover;
-    private boolean _inSight = false;
-    private int reset = 0;
+    private CL_Agent _agent;
+    private CL_Pokemon pokemon;
+    private edge_data edgeData;
+
+
+    private boolean check = false;
+    private int z = 0;
 
     /** agent's constructor. initialize all variables
-     * @param agent the CL_Agent that the Agent is managing.
+     * @param agent the CL_Agent that the Agent is managing
      * @param game the main game service.
      * @param mover the agent moving algorithm.
      *
      */
     public AgentData(CL_Agent agent, game_service game, MoveData mover){
-        _agent = agent;
-        _game = game;
-        _mover = mover;
-        whiteList = new HashSet<>();
+        setAgent(agent);
+        setGameService(game);
+        setMover(mover);
+        list = new HashSet<>();
     }
 
     /** get the sleeping time from mover and wait
@@ -41,74 +45,72 @@ class AgentData implements Runnable {
     @Override
     public void run() {
         long dt;
-        while(_game.isRunning()){
+        while(gameService.isRunning())
+        {
             dt = _mover.init(this, _agent);
-            reset++;
-            if(reset == 100){
-                whiteList.clear();
+            z++;
+            if(z == 100)
+            {
+                list.clear();
             }
-            try {
+            try
+            {
                 Thread.sleep(dt);
             }
-            catch(Exception e) {
+            catch(Exception e)
+            {
                 e.printStackTrace();
             }
         }
     }
+///////////////////////////Getters and Setters////////////////////////////////////////////////////////////////
 
-    /** @return the previous pokemon targeted. */
-    public CL_Pokemon getPrevPok() {
-        return _prevPok;
-    }
-
-    /** sets the new previous pokemon that was targeted.
-     * @param _prevPok the previous pokemon that was targeted.
-     */
-    public void setPrevPok(CL_Pokemon _prevPok) {
-        this._prevPok = _prevPok;
-    }
-
-    /**
-     * @return the previous edge the agent passed.
-     */
-    public edge_data getPrevEdge() {
-        return _prevEdge;
-    }
-
-    /** sets the previous edge visited.
-     * @param _prevEdge the previous edge that was passed.
-     */
-    public void setPrevEdge(edge_data _prevEdge) {
-        this._prevEdge = _prevEdge;
-    }
-
-    /**
-     * @return a white list of exclusive pokemons to be targeted.
-     */
-    public HashSet<String> getWhiteList() {
-        return whiteList;
-    }
-
-    /** sets a new agent to mange.
-     *  mainly for updating the agent after the game's move().
-     * @param agent the agent to manage
-     */
     public void setAgent(CL_Agent agent) {
         _agent = agent;
     }
 
-    /** mainly for mover algorithms.
-     * @return if there is a pokemon in sight of the agent.
-     */
-    public boolean getFlag() {
-        return _inSight;
+    public void setGameService(game_service game){
+        gameService = game;
     }
 
-    /** sets if the agent reached a pokemon.
-     *  mainly for mover algorithms.
-     * @param flag if we reached the pokemon
-     */
-    public void setFlag(boolean flag) {
-        this._inSight = flag;
+    public void setMover(MoveData move){
+        _mover = move;
     }
+
+    public CL_Pokemon getPriorPokemon() {
+        return pokemon;
+    }
+
+
+    public void setPriorPokemon(CL_Pokemon _prevPok) {
+        this.pokemon = _prevPok;
+    }
+
+
+    public edge_data getPriorEdge() {
+        return edgeData;
+    }
+
+
+
+
+    public boolean getFlag() {
+        return check;
+    }
+
+
+    public void setFlag(boolean flag) {
+        this.check = flag;
+    }
+
+
+    public void setPriorEdge(edge_data _prevEdge) {
+        this.edgeData = _prevEdge;
+    }
+
+
+    public Collection<String> getList() {
+        return list;
+    }
+
 }
