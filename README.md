@@ -11,16 +11,7 @@ Moreover the project have a test files for every class.
 * Can calaulate **the shortest path** between 2 node **aka** source and destination.
 * Calculation of graph that include up to **10 milons of nodes** in time up to **10 seconds!**
 
-### For installing the project 
-Get this [Pokemon game project](https://github.com/Idanturjeman/PokemonGame) to your own computer with your workspace directory.
-```sh
-$ git clone https://github.com/Idanturjeman/PackmanGame.git
 
-```
-
-### Nedded for installing
-* **[JDK](https://www.oracle.com/java/technologies/javase-downloads.html)**
-* **[intllij](https://www.jetbrains.com/idea/)** or some other **IDE**
 
 ## Culculate the shortest path with Dijktra's algorithm
 **see [Dijkstra's algorithms](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm) for more info.**
@@ -29,7 +20,55 @@ $ git clone https://github.com/Idanturjeman/PackmanGame.git
 
 <img src = "https://ucarecdn.com/d624d487-da51-42ad-a520-cc3fb8f253bd/" width="500" >
 
+### For installing the project 
+Get this [Pokemon game project](https://github.com/Idanturjeman/PokemonGame) to your own computer with your workspace directory.
+```sh
+$ git clone https://github.com/Idanturjeman/PackmanGame.git
 
-### In addition
+```
+
+### Prerequisite
+* **[JDK](https://www.oracle.com/java/technologies/javase-downloads.html)**
+* **[intllij](https://www.jetbrains.com/idea/)** or some other **IDE**
+
+### Game's main idea
+We got some [Agents](https://github.com/Idanturjeman/PokemonGame/wiki/Agents) on a [directed weighted graph](https://github.com/Idanturjeman/PokemonGame/wiki/Directed-Weighted-Graph), and we trying to catch the most of [Pokemons](https://github.com/Idanturjeman/PokemonGame/wiki/Pokemons) as we can that also present on the same graph, and we trying to do that in the best efficient way with the lowes calls from [moves](https://github.com/Idanturjeman/PokemonGame/wiki/Move-Data). obviously we have some [Algorithms](https://github.com/Idanturjeman/PokemonGame/wiki/Algorithms) that helping us to do so. 
+
+
+
+***Some examples of scenerios in the game***
+* *scenario 0*: 
+```sh
+149 pkm, 57 moves.
+```
+* *scenario 1*:
+```sh
+580 pkm, 225 moves.
+```
+* *scenario 2*:
+```sh
+287 pkm, 75 moves.
+```
+* *scenario 3*:
+```sh
+936 pkm, 265 moves.
+```
+* *scenario 4*:
+```sh
+243 pkm, 62 moves.
+```
+* *scenario 5*:
+```sh
+583 pkm, 204 moves.
+```
+* *scenario 6*:
+```sh
+79 pkm, 28 moves.
+```
+* *scenario 7*:
+```sh
+412 pkm, 191 moves.
+```
+### Don't Stop Here
 
 **For more [information](https://github.com/Idanturjeman/PokemonGame/wiki) on this project.**
