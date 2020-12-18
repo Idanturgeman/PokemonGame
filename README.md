@@ -32,11 +32,12 @@ $ git clone https://github.com/Idanturjeman/PackmanGame.git
 * **[intllij](https://www.jetbrains.com/idea/)** or some other **IDE**
 
 ### Game's main idea
-We got some [Agents](https://github.com/Idanturjeman/PokemonGame/wiki/Agents) on a [directed weighted graph](https://github.com/Idanturjeman/PokemonGame/wiki/Directed-Weighted-Graph), and we trying to catch the most of [Pokemons](https://github.com/Idanturjeman/PokemonGame/wiki/Pokemons) as we can that also present on the same graph, and we trying to do that in the best efficient way with the lowes calls from [moves](https://github.com/Idanturjeman/PokemonGame/wiki/Move-Data). obviously we have some [Algorithms](https://github.com/Idanturjeman/PokemonGame/wiki/Algorithms) that helping us to do so. 
+We got some [Agents](https://github.com/Idanturjeman/PokemonGame/wiki/Agents) on a [directed weighted graph](https://github.com/Idanturjeman/PokemonGame/wiki/Directed-Weighted-Graph), and our purpose is to catch the most of [Pokemons](https://github.com/Idanturjeman/PokemonGame/wiki/Pokemons) as we can that are on the same graph, and we trying to do that in the best efficient way with the lowest calls from [moves](https://github.com/Idanturjeman/PokemonGame/wiki/Move-Data). obviously we have some [Algorithms](https://github.com/Idanturjeman/PokemonGame/wiki/Algorithms) that helping us to do so. 
 
 
 
 ***Some examples of scenerios in the game***
+
 * *scenario 0*: 
 ```sh
 149 pkm, 57 moves.
