@@ -10,7 +10,6 @@ import gameClient.CL_Pokemon;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,11 +21,11 @@ import java.util.List;
  */
 public class Ex2 implements Runnable{
 
-    private static FrameData _win;
-    private static Arena _ar;
+    private static FrameData _frame;
+    private static Arena _arena;
     private static long _id = -1;
     private static int _scenario = 0;
-    private static ArrayList<Thread> _agents = new ArrayList<>();
+    private static ArrayList<Thread> _agentsList = new ArrayList<>();
     private static directed_weighted_graph _graph;
 
     /** main method, launches the game and the GUIs.
@@ -35,13 +34,18 @@ public class Ex2 implements Runnable{
      */
     public static void main(String[] a) {
         Thread client = new Thread(new Ex2());
-        if(a.length == 0){
+        if(a.length == 0)
+        {
             FrameData log = new FrameData();
             log.frameData();
-            while(log.isOpen()){
-                try {
+            while(log.isOpen())
+            {
+                try
+                {
                     Thread.sleep(10);
-                } catch (InterruptedException e) {
+                }
+                catch (InterruptedException e)
+                {
                     e.printStackTrace();
                 }
             }
@@ -49,7 +53,8 @@ public class Ex2 implements Runnable{
             _scenario = log.getScenario();
             log.dispose();
         }
-        else{
+        else
+            {
             _id = Long.parseLong(a[0]);
             _scenario = Integer.parseInt(a[1]);
         }
@@ -62,27 +67,35 @@ public class Ex2 implements Runnable{
     @Override
     public void run() {
         game_service game = Game_Server_Ex2.getServer(_scenario);
-        if(_id > -1){
+        if(_id > -1)
+        {
             long id = _id;
             game.login(id);
         }
         init(game);
 
         game.startGame();
-        _win.setTitle("Ex2 - OOP: Gotta catch them all! "+game.toString());
+        _frame.setTitle("Ex2 - OOP: Gotta catch them all! "+game.toString());
         int ind=0;
         long dt=1000/60;
         moveAgents(game);
-        for(Thread thread : _agents){
+        for(Thread thread : _agentsList)
+        {
             thread.start();
         }
-        while(game.isRunning()) {
-            try {
-                if(ind%1==0) {_win.repaint();}
+        while(game.isRunning())
+        {
+            try
+            {
+                if(ind%1==0)
+                {
+                    _frame.repaint();
+                }
                 Thread.sleep(dt);
                 ind++;
             }
-            catch(Exception e) {
+            catch(Exception e)
+            {
                 e.printStackTrace();
             }
         }
@@ -95,16 +108,17 @@ public class Ex2 implements Runnable{
     private void moveAgents(game_service game) {
         String lg = game.move();
         List<CL_Agent> log = Arena.getAgents(lg, _graph);
-        _ar.setAgents(log);
+        _arena.setAgents(log);
         String fs =  game.getPokemons();
         List<CL_Pokemon> ffs = Arena.json2Pokemons(fs);
-        _ar.setPokemons(ffs);
-        MoveData mover = new MoveData(_ar,_graph,game,log.size());
-        for(int i=0;i<log.size();i++) {
+        _arena.setPokemons(ffs);
+        MoveData mover = new MoveData(_arena,_graph,game,log.size());
+        for(int i=0;i<log.size();i++)
+        {
             CL_Agent ag = log.get(i);
             AgentData agent = new AgentData(ag,game,mover);
             Thread thread = new Thread(agent);
-            _agents.add(thread);
+            _agentsList.add(thread);
         }
     }
 
@@ -113,30 +127,38 @@ public class Ex2 implements Runnable{
         String fs = game.getPokemons();
         DWGraphs_Algo ga = new DWGraphs_Algo();
         _graph = ga.Json2Graph(g);
-        _ar = new Arena();
-        _ar.setGraph(_graph);
-        _ar.setPokemons(Arena.json2Pokemons(fs));
-        _win = new FrameData("Ex2", game, _scenario);
-        _win.setSize(1000, 700);
-        _win.update(_ar);
-        _win.show();
+        _arena = new Arena();
+        _arena.setGraph(_graph);
+        _arena.setPokemons(Arena.json2Pokemons(fs));
+        _frame = new FrameData("Ex2", game, _scenario);
+        _frame.setSize(1000, 700);
+        _frame.update(_arena);
+        _frame.show();
         String info = game.toString();
         JSONObject line;
-        try {
+        try
+        {
             line = new JSONObject(info);
             JSONObject ttt = line.getJSONObject("GameServer");
             int rs = ttt.getInt("agents");
             System.out.println(info);
             System.out.println(game.getPokemons());
             ArrayList<CL_Pokemon> cl_fs = Arena.json2Pokemons(game.getPokemons());
-            for(int a = 0;a<cl_fs.size();a++) { Arena.updateEdge(cl_fs.get(a),_graph);}
-            for(int a = 0;a<rs;a++) {
+            for(int a = 0;a<cl_fs.size();a++)
+            {
+                Arena.updateEdge(cl_fs.get(a),_graph);
+            }
+            for(int a = 0;a<rs;a++)
+            {
                 int ind = a%cl_fs.size();
                 CL_Pokemon c = cl_fs.get(ind);
                 int nn = c.get_edge().getSrc();
                 game.addAgent(nn);
             }
         }
-        catch (JSONException e) {e.printStackTrace();}
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

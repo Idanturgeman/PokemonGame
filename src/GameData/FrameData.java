@@ -208,7 +208,7 @@ public class FrameData extends JFrame implements ActionListener{
         g.fillOval((int)fp.x()-r, (int)fp.y()-r, 2*r, 2*r);
         g.drawString(""+n.getKey(), (int)fp.x(), (int)fp.y()-4*r);
     }
-    
+
 
     private void drawInfo(Graphics g) {
         g.setFont(new Font("Arial",Font.BOLD,36));
