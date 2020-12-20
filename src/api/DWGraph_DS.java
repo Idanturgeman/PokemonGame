@@ -53,6 +53,7 @@ public class DWGraph_DS implements directed_weighted_graph {
                 srcNode.addEdge(edge);
                 destNode.ReversEdge(edge);
                 _edgeSize++;
+                _MC++;
             }
         }
     }
@@ -110,6 +111,7 @@ public class DWGraph_DS implements directed_weighted_graph {
             edge_data edgeData = srcNode.removeEdge(dest);
             if (edgeData != null){
                 _edgeSize--;
+                _MC++;
             }
             return edgeData;
         }
