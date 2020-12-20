@@ -49,18 +49,18 @@ public class FrameData extends JFrame implements ActionListener{
     public static void frameData(){
         JPanel panel = new JPanel();
         login = new JFrame();
-        login.setSize(330,160);
+        login.setSize(302,142);
         panel.setLayout(null);
         login.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         login.add(panel);
         JLabel user = new JLabel("User:");
-        user.setBounds(10,20,80,25);
+        user.setBounds(12,22,82,27);
 
         JLabel scene = new JLabel("Scenario:");
-        scene.setBounds(10,50,80,25);
+        scene.setBounds(12,52,82,27);
 
-        _text = new JTextField(20);
-        _text.setBounds(100,20,165,25);
+        _text = new JTextField(22);
+        _text.setBounds(102,22,162,27);
 
         String scenes[] = new String[24];
         for(int i = 0; i < 24; i++)
@@ -69,15 +69,15 @@ public class FrameData extends JFrame implements ActionListener{
         }
         _numBox = new JComboBox(scenes);
         _numBox.addActionListener(new FrameData());
-        _numBox.setBounds(100,50,165,25);
+        _numBox.setBounds(102,52,162,27);
 
         _playButton = new JButton("Free Play");
         _playButton.addActionListener(new FrameData());
-        _playButton.setBounds(10,80,120,30);
+        _playButton.setBounds(12,82,122,32);
 
         _loginButton = new JButton("Login");
         _loginButton.addActionListener(new FrameData());
-        _loginButton.setBounds(170,80,120,30);
+        _loginButton.setBounds(172,82,122,32);
 
         panel.add(user);
         panel.add(scene);
@@ -151,12 +151,12 @@ public class FrameData extends JFrame implements ActionListener{
      */
     @Override
     public void paintComponents(Graphics g){
-        drawPokemons(g);
         drawGraph(g);
         drawAgents(g);
-        drawInfo(g);
+        drawPokemons(g);
         drawClock(g);
         drawResult(g);
+        drawInfo(g);
     }
 
 
