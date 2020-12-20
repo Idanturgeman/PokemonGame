@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.*;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -165,8 +167,8 @@ public class FrameData extends JFrame implements ActionListener{
      * @param g the main graphics object.
      */
     public void paint(Graphics g) {
-        int w = this.getWidth();
         int h = this.getHeight();
+        int w = this.getWidth();
         image = this.createImage(w,h);
         Graphics graphics = image.getGraphics();
         paintComponents(graphics);
@@ -211,7 +213,7 @@ public class FrameData extends JFrame implements ActionListener{
 
 
     private void drawInfo(Graphics g) {
-        g.setFont(new Font("Arial",Font.BOLD,36));
+        g.setFont(new Font("Arial",Font.ITALIC,36));
         g.drawString("Level: "+ scenario,this.getWidth()/2 - 40, 70);
     }
 
@@ -220,23 +222,23 @@ public class FrameData extends JFrame implements ActionListener{
      * in addition of the score of each individual agent.
      */
     private void drawResult(Graphics g){
-        List<CL_Agent> agents = arena.getAgents();
+        Collection<CL_Agent> agents = arena.getAgents();
         double totalScore = 0;
         double score;
         for(CL_Agent agent : agents)
         {
             totalScore += agent.getValue();
             score = agent.getValue();
-            g.setFont(new Font("Arial",Font.BOLD,16));
+            g.setFont(new Font("Arial",Font.ITALIC,16));
             g.drawString("agent "+agent.getID()+": "+String.valueOf(score), this.getWidth()-125, 90+20*agent.getID());
         }
-        g.setFont(new Font("Arial",Font.BOLD,36));
+        g.setFont(new Font("Arial",Font.ITALIC,36));
         g.drawString(String.valueOf(totalScore), this.getWidth()-100, 70);
     }
 
 
     private void drawClock(Graphics g){
-        g.setFont(new Font("Arial",Font.BOLD,36));
+        g.setFont(new Font("Arial",Font.ITALIC,36));
         int sec = (int) (gameService.timeToEnd()/1000);
         int min = (int) (gameService.timeToEnd()/60000);
         String time = min+":"+sec;
@@ -263,7 +265,7 @@ public class FrameData extends JFrame implements ActionListener{
 
 
     private void drawPokemons(Graphics g) {
-        List<CL_Pokemon> fs = arena.getPokemons();
+        Collection<CL_Pokemon> fs = arena.getPokemons();
         if(fs!=null)
         {
             Iterator<CL_Pokemon> itr = fs.iterator();
