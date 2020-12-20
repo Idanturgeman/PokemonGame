@@ -13,9 +13,10 @@ import java.util.*;
 
 public class DWGraphs_Algo implements dw_graph_algorithms {
 
+    public DWGraphs_Algo(){}
+
     public DWGraph_DS _myGraph;
 
-    public DWGraphs_Algo(){}
 
     public DWGraphs_Algo(directed_weighted_graph g){
         _myGraph = (DWGraph_DS) g;
